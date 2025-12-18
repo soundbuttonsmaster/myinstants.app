@@ -1,0 +1,340 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SoundButton from '../components/SoundButton.astro';
+import { fetchNewSounds } from '../lib/api';
+
+// Fetch new sounds data
+const newSounds = await fetchNewSounds(100);
+
+// SEO Meta Data
+const pageTitle = 'New Sound Buttons: Latest Meme Soundboard';
+const pageDescription = 'Discover the newest sound buttons on Myinstants! Fresh prank sounds, unblocked meme soundboard, and latest sound effects added daily. Play and share instantly!';
+const pageKeywords = 'new sound buttons, latest meme soundboard, prank sounds, new sound effects, meme soundboard, latest sounds';
+const canonicalUrl = 'https://myinstants.app/new';
+const ogImage = 'https://myinstants.app/images/og-image.jpg';
+const h1Title = 'New Sound Buttons';
+const shortDescription = 'Find new sound buttons and prank sounds added daily to Myinstants soundboard collection!';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>{pageTitle}</title>
+    <meta name="title" content={pageTitle} />
+    <meta name="description" content={pageDescription} />
+    <meta name="keywords" content={pageKeywords} />
+    <meta name="author" content="Myinstants" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Myinstants" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    
+    <!-- Additional SEO Tags -->
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "New Sound Buttons",
+      "description": pageDescription,
+      "url": canonicalUrl,
+      "mainEntity": {
+        "@type": "ItemList",
+        "numberOfItems": newSounds.length,
+        "itemListElement": newSounds.slice(0, 10).map((sound, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "item": {
+            "@type": "AudioObject",
+            "name": sound.name,
+            "contentUrl": sound.sound_file,
+            "description": `New sound button: ${sound.name}`
+          }
+        }))
+      }
+    })} />
+    
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <Header />
+    
+    <main class="main-content">
+      <!-- Breadcrumbs -->
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol class="breadcrumb-list">
+          <li class="breadcrumb-item">
+            <a href="/">Home</a>
+          </li>
+          <li class="breadcrumb-item breadcrumb-active" aria-current="page">
+            New Sounds
+          </li>
+        </ol>
+      </nav>
+
+      <!-- Hero Section -->
+      <div class="hero-section">
+        <h1 class="main-title">{h1Title}</h1>
+        <p class="main-description">
+          {shortDescription}
+        </p>
+      </div>
+
+      <!-- New Sounds Section -->
+      <section class="sounds-section">
+        <div class="section-header">
+          <div class="section-title-wrapper">
+            <h2 class="section-title">Sound Buttons : New</h2>
+          </div>
+        </div>
+        <div class="sounds-grid" id="soundsGrid" data-total-sounds={newSounds.length}>
+          {newSounds.length > 0 ? (
+            newSounds.map((sound, index) => (
+              <div class="sound-item" data-sound-index={index}>
+                <SoundButton sound={sound} />
+              </div>
+            ))
+          ) : (
+            <p class="no-sounds">No new sounds available at the moment.</p>
+          )}
+        </div>
+        {newSounds.length > 20 && (
+          <div class="load-more-container">
+            <button class="load-more-button" id="loadMoreBtn">
+              Load More Sounds
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        )}
+      </section>
+    </main>
+
+    <Footer />
+
+  </body>
+</html>
+
+<script>
+  // Pagination functionality
+  (function() {
+    const soundsGrid = document.getElementById('soundsGrid');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    
+    if (!soundsGrid || !loadMoreBtn) return;
+    
+    const totalSounds = parseInt(soundsGrid.getAttribute('data-total-sounds') || '0');
+    const soundsPerLineDesktop = 11;
+    const soundsPerLineMobile = 4;
+    const initialLines = 5;
+    const loadMoreLines = 4;
+    
+    let currentlyVisible = 0;
+    
+    // Calculate initial visible count based on screen size
+    function getSoundsPerLine() {
+      return window.innerWidth > 768 ? soundsPerLineDesktop : soundsPerLineMobile;
+    }
+    
+    function getInitialVisible() {
+      return initialLines * getSoundsPerLine();
+    }
+    
+    function getLoadMoreCount() {
+      return loadMoreLines * getSoundsPerLine();
+    }
+    
+    function updateVisibleSounds() {
+      const soundsPerLine = getSoundsPerLine();
+      const initialVisible = getInitialVisible();
+      const loadMoreCount = getLoadMoreCount();
+      
+      // Set initial visible count
+      if (currentlyVisible === 0) {
+        currentlyVisible = initialVisible;
+      }
+      
+      const soundItems = soundsGrid.querySelectorAll('.sound-item');
+      let visibleCount = 0;
+      
+      soundItems.forEach((item, index) => {
+        if (index < currentlyVisible) {
+          item.style.display = '';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+      
+      // Show/hide load more button
+      if (currentlyVisible >= totalSounds) {
+        loadMoreBtn.style.display = 'none';
+      } else {
+        loadMoreBtn.style.display = 'block';
+      }
+    }
+    
+    loadMoreBtn.addEventListener('click', () => {
+      const loadMoreCount = getLoadMoreCount();
+      currentlyVisible = Math.min(currentlyVisible + loadMoreCount, totalSounds);
+      updateVisibleSounds();
+      
+      // Scroll to newly loaded content
+      const soundItems = soundsGrid.querySelectorAll('.sound-item');
+      if (soundItems[currentlyVisible - loadMoreCount]) {
+        soundItems[currentlyVisible - loadMoreCount].scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
+    });
+    
+    // Handle window resize
+    let resizeTimeout: number;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = window.setTimeout(() => {
+        const newInitial = getInitialVisible();
+        if (currentlyVisible < newInitial) {
+          currentlyVisible = newInitial;
+        }
+        updateVisibleSounds();
+      }, 250);
+    });
+    
+    // Initialize
+    updateVisibleSounds();
+  })();
+</script>
+
+<style>
+  /* Breadcrumbs */
+  .breadcrumbs {
+    margin-bottom: 1.5rem;
+  }
+
+  .breadcrumb-list {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumb-item:not(:last-child)::after {
+    content: '/';
+    margin-left: 0.5rem;
+    color: var(--text-secondary);
+  }
+
+  .breadcrumb-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .breadcrumb-item a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+  }
+
+  .breadcrumb-active {
+    color: var(--text-primary);
+  }
+
+  /* Hero Section */
+  .hero-section {
+    text-align: center;
+    margin: 3rem 0 2rem;
+  }
+
+  .main-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  .main-description {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Introduction Text */
+  .intro-text {
+    text-align: center;
+    margin: 2rem 0 3rem;
+  }
+
+  .intro-text p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    max-width: 900px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Section Header */
+  .section-header {
+    margin-bottom: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .main-title {
+      font-size: 1.75rem;
+    }
+
+    .main-description {
+      font-size: 1rem;
+    }
+
+    .breadcrumb-list {
+      font-size: 0.85rem;
+    }
+  }
+</style>
+

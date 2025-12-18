@@ -1,0 +1,577 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// SEO Meta Data
+const pageTitle = 'My Profile - Myinstants Account Settings & Dashboard';
+const pageDescription = 'Manage your Myinstants profile, update your information, view your account details, and track your soundboard activity. Access your favorites and uploads.';
+const pageKeywords = 'my profile, account settings, user profile, myinstants profile, soundboard profile, account dashboard';
+const canonicalUrl = 'https://myinstants.app/profile';
+const ogImage = 'https://myinstants.app/images/og-image.jpg';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>{pageTitle}</title>
+    <meta name="title" content={pageTitle} />
+    <meta name="description" content={pageDescription} />
+    <meta name="keywords" content={pageKeywords} />
+    <meta name="author" content="Myinstants" />
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={ogImage} />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "name": "My Profile",
+      "description": pageDescription,
+      "url": canonicalUrl
+    })} />
+    
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <Header />
+    
+    <main class="main-content">
+      <div class="profile-container">
+        <div class="profile-header">
+          <h1 class="page-title">My Profile</h1>
+          <p class="page-subtitle">Manage your account settings and information</p>
+        </div>
+
+        <div class="profile-layout">
+          <div class="profile-sidebar">
+            <div class="profile-card">
+              <div class="profile-avatar">
+                <div class="avatar-circle">
+                  <span id="avatarInitials">U</span>
+                </div>
+              </div>
+              <div class="profile-info">
+                <h2 id="profileName" class="profile-name">Loading...</h2>
+                <p id="profileEmail" class="profile-email">Loading...</p>
+              </div>
+              <div class="profile-stats">
+                <a href="/favorites" class="stat-item">
+                  <span class="stat-value" id="favoritesCount">0</span>
+                  <span class="stat-label">Favorites</span>
+                </a>
+                <a href="/upload" class="stat-item">
+                  <span class="stat-value" id="uploadsCount">0</span>
+                  <span class="stat-label">Uploads</span>
+                </a>
+              </div>
+            </div>
+
+            <nav class="profile-nav">
+              <a href="/profile" class="nav-item active">Profile</a>
+              <a href="/favorites" class="nav-item">My Favorites</a>
+              <a href="/upload" class="nav-item">Upload Sounds</a>
+              <button id="logoutBtn" class="nav-item logout-btn">Logout</button>
+            </nav>
+          </div>
+
+          <div class="profile-content">
+            <div class="content-card">
+              <h2 class="card-title">Profile Information</h2>
+              
+              <form id="profileForm" class="profile-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="first_name" class="form-label">First Name</label>
+                    <input
+                      type="text"
+                      id="first_name"
+                      name="first_name"
+                      class="form-input"
+                      placeholder="Enter first name"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="last_name" class="form-label">Last Name</label>
+                    <input
+                      type="text"
+                      id="last_name"
+                      name="last_name"
+                      class="form-input"
+                      placeholder="Enter last name"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="email" class="form-label">Email Address</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-input"
+                    disabled
+                  />
+                  <small class="form-hint">Email cannot be changed</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="phone_number" class="form-label">Phone Number</label>
+                  <input
+                    type="tel"
+                    id="phone_number"
+                    name="phone_number"
+                    class="form-input"
+                    placeholder="Enter phone number"
+                  />
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                <div id="successMessage" class="success-message" style="display: none;"></div>
+
+                <button type="submit" class="save-button" id="saveBtn">
+                  <span class="button-text">Save Changes</span>
+                  <span class="button-loader" style="display: none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                    </svg>
+                  </span>
+                </button>
+              </form>
+            </div>
+
+            <div class="content-card">
+              <h2 class="card-title">Account Information</h2>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">Username</span>
+                  <span class="info-value" id="infoUsername">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Member Since</span>
+                  <span class="info-value" id="infoDateJoined">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Last Login</span>
+                  <span class="info-value" id="infoLastLogin">-</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Account Status</span>
+                  <span class="info-value" id="infoStatus">-</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <Footer />
+
+    <script>
+      import { getUserProfile, updateUserProfile, fetchUserFavorites, fetchUserUploadedSounds } from '../lib/api';
+      import { getAuthToken, getUserData, logout } from '../lib/auth';
+
+      const token = getAuthToken();
+      
+      if (!token) {
+        window.location.href = '/login';
+      }
+
+      async function loadProfile() {
+        const userData = getUserData();
+        if (userData) {
+          displayUserData(userData);
+        }
+
+        try {
+          const profile = await getUserProfile(token!);
+          if (profile) {
+            displayUserData(profile);
+            setUserData(profile);
+          }
+        } catch (error) {
+          console.error('Failed to load profile:', error);
+        }
+
+        // Load stats
+        try {
+          const [favorites, uploads] = await Promise.all([
+            fetchUserFavorites(token!, 1, 1),
+            fetchUserUploadedSounds(token!, 1, 1)
+          ]);
+          
+          document.getElementById('favoritesCount')!.textContent = favorites.count.toString();
+          document.getElementById('uploadsCount')!.textContent = uploads.count.toString();
+        } catch (error) {
+          console.error('Failed to load stats:', error);
+        }
+      }
+
+      function displayUserData(user: any) {
+        const name = user.full_name || user.username || 'User';
+        const initials = name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+        
+        document.getElementById('avatarInitials')!.textContent = initials;
+        document.getElementById('profileName')!.textContent = name;
+        document.getElementById('profileEmail')!.textContent = user.email || '-';
+        
+        (document.getElementById('email') as HTMLInputElement).value = user.email || '';
+        (document.getElementById('first_name') as HTMLInputElement).value = user.first_name || '';
+        (document.getElementById('last_name') as HTMLInputElement).value = user.last_name || '';
+        (document.getElementById('phone_number') as HTMLInputElement).value = user.phone_number || '';
+        
+        document.getElementById('infoUsername')!.textContent = user.username || '-';
+        document.getElementById('infoDateJoined')!.textContent = user.date_joined 
+          ? new Date(user.date_joined).toLocaleDateString() 
+          : '-';
+        document.getElementById('infoLastLogin')!.textContent = user.last_login 
+          ? new Date(user.last_login).toLocaleDateString() 
+          : 'Never';
+        document.getElementById('infoStatus')!.textContent = user.is_active ? 'Active' : 'Inactive';
+      }
+
+      const profileForm = document.getElementById('profileForm') as HTMLFormElement;
+      const errorMessage = document.getElementById('errorMessage') as HTMLDivElement;
+      const successMessage = document.getElementById('successMessage') as HTMLDivElement;
+      const saveBtn = document.getElementById('saveBtn') as HTMLButtonElement;
+
+      profileForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const buttonText = saveBtn.querySelector('.button-text') as HTMLElement;
+        const buttonLoader = saveBtn.querySelector('.button-loader') as HTMLElement;
+        
+        errorMessage.style.display = 'none';
+        successMessage.style.display = 'none';
+        
+        buttonText.style.display = 'none';
+        buttonLoader.style.display = 'inline-block';
+        saveBtn.disabled = true;
+
+        const formData = new FormData(profileForm);
+        const updateData: any = {};
+        
+        if (formData.get('first_name')) updateData.first_name = formData.get('first_name');
+        if (formData.get('last_name')) updateData.last_name = formData.get('last_name');
+        if (formData.get('phone_number')) updateData.phone_number = formData.get('phone_number');
+
+        try {
+          const updated = await updateUserProfile(token!, updateData);
+          if (updated) {
+            setUserData(updated);
+            displayUserData(updated);
+            successMessage.textContent = 'Profile updated successfully!';
+            successMessage.style.display = 'block';
+          } else {
+            throw new Error('Failed to update profile');
+          }
+        } catch (error: any) {
+          errorMessage.textContent = error.message || 'Failed to update profile. Please try again.';
+          errorMessage.style.display = 'block';
+        } finally {
+          buttonText.style.display = 'inline';
+          buttonLoader.style.display = 'none';
+          saveBtn.disabled = false;
+        }
+      });
+
+      document.getElementById('logoutBtn')?.addEventListener('click', () => {
+        logout();
+      });
+
+      loadProfile();
+    </script>
+  </body>
+</html>
+
+<style>
+  .profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .profile-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .page-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+  }
+
+  .profile-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+  }
+
+  .profile-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .profile-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .profile-avatar {
+    margin-bottom: 1rem;
+  }
+
+  .avatar-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 auto;
+  }
+
+  .profile-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+  }
+
+  .profile-email {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  .profile-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .stat-item {
+    text-decoration: none;
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .profile-nav {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .nav-item {
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+
+  .nav-item:hover {
+    background: var(--bg-light);
+  }
+
+  .nav-item.active {
+    background: var(--primary-color);
+    color: var(--white);
+  }
+
+  .logout-btn {
+    color: var(--danger-color);
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+  }
+
+  .logout-btn:hover {
+    background: #fee;
+  }
+
+  .profile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .content-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+  }
+
+  .profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-label {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+  }
+
+  .form-input {
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  }
+
+  .form-input:disabled {
+    background: var(--bg-light);
+    cursor: not-allowed;
+  }
+
+  .save-button {
+    padding: 0.875rem 2rem;
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .save-button:hover:not(:disabled) {
+    background: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  }
+
+  .save-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .info-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .info-value {
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  @media (max-width: 968px) {
+    .profile-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+

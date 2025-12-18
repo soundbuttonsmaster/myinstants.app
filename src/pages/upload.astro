@@ -1,0 +1,743 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { fetchCategories } from '../lib/api';
+
+const categories = await fetchCategories();
+
+// SEO Meta Data
+const pageTitle = 'Upload Sound - Share Your Sound Buttons | Myinstants';
+const pageDescription = 'Upload your own sound buttons to Myinstants. Share sounds with the community and build your collection. Upload MP3, WAV, or OGG files up to 10MB.';
+const pageKeywords = 'upload sound, upload sound button, share sounds, upload mp3, soundboard upload, create sound button';
+const canonicalUrl = 'https://myinstants.app/upload';
+const ogImage = 'https://myinstants.app/images/og-image.jpg';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>{pageTitle}</title>
+    <meta name="title" content={pageTitle} />
+    <meta name="description" content={pageDescription} />
+    <meta name="keywords" content={pageKeywords} />
+    <meta name="author" content="Myinstants" />
+    <meta name="robots" content="noindex, nofollow" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Myinstants" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Upload Sound",
+      "description": pageDescription,
+      "url": canonicalUrl
+    })} />
+    
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <Header />
+    
+    <main class="main-content">
+      <!-- Loading/Auth Check State -->
+      <div id="authCheckState" class="auth-check-state">
+        <div class="spinner"></div>
+        <p>Checking authentication...</p>
+      </div>
+
+      <!-- Not Authenticated State -->
+      <div id="notAuthenticatedState" class="not-authenticated-state" style="display: none;">
+        <div class="auth-required-container">
+          <div class="auth-required-card">
+            <div class="auth-icon-wrapper">
+              <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <h2 class="auth-title">Authentication Required</h2>
+            <p class="auth-description">You need to be logged in to upload sounds to Myinstants. Create an account or login to start sharing your sound buttons with the community.</p>
+            <div class="auth-actions">
+              <a href="/login" class="auth-button primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Login
+              </a>
+              <a href="/signup" class="auth-button secondary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Create Account
+              </a>
+            </div>
+            <div class="auth-benefits">
+              <p class="benefits-title">Why create an account?</p>
+              <ul class="benefits-list">
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Upload unlimited sounds
+                </li>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Save your favorite sounds
+                </li>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Track your uploads
+                </li>
+                <li>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Build your soundboard collection
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Authenticated Content -->
+      <div id="authenticatedContent" style="display: none;">
+        <div class="page-header">
+          <h1 class="page-title">Upload Sound</h1>
+          <p class="page-subtitle">Share your sound buttons with the community</p>
+        </div>
+
+        <div class="upload-container">
+          <div class="upload-card">
+            <form id="uploadForm" class="upload-form">
+            <div class="form-group">
+              <label for="name" class="form-label">Sound Name *</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="form-input"
+                placeholder="Enter sound name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="sound_file" class="form-label">Audio File *</label>
+              <div class="file-upload-area" id="fileUploadArea">
+                <input
+                  type="file"
+                  id="sound_file"
+                  name="sound_file"
+                  accept="audio/*"
+                  required
+                  style="display: none;"
+                />
+                <div class="upload-placeholder">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                  </svg>
+                  <p>Click to upload or drag and drop</p>
+                  <small>MP3, WAV, OGG (Max 10MB)</small>
+                </div>
+                <div class="file-info" id="fileInfo" style="display: none;">
+                  <span id="fileName"></span>
+                  <button type="button" id="removeFile" class="remove-file">Remove</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="category" class="form-label">Category</label>
+              <select id="category" name="category" class="form-input">
+                <option value="">Select a category (optional)</option>
+                {categories.map((cat) => (
+                  <option value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="tags" class="form-label">Tags</label>
+              <input
+                type="text"
+                id="tags"
+                name="tags"
+                class="form-input"
+                placeholder="funny, music, meme (comma-separated)"
+              />
+              <small class="form-hint">Separate tags with commas</small>
+            </div>
+
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            <div id="successMessage" class="success-message" style="display: none;"></div>
+
+            <button type="submit" class="upload-button" id="submitBtn">
+              <span class="button-text">Upload Sound</span>
+              <span class="button-loader" style="display: none;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                </svg>
+              </span>
+            </button>
+          </form>
+        </div>
+
+        <div class="upload-info-card">
+          <h3>Upload Guidelines</h3>
+          <ul class="guidelines-list">
+            <li>Maximum file size: 10MB</li>
+            <li>Supported formats: MP3, WAV, OGG</li>
+            <li>Choose a descriptive name for your sound</li>
+            <li>Add relevant tags to help others find your sound</li>
+            <li>Select an appropriate category</li>
+            <li>Ensure your content follows community guidelines</li>
+          </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <Footer />
+
+    <script>
+      import { uploadSound } from '../lib/api';
+      import { getAuthToken } from '../lib/auth';
+
+      const authCheckState = document.getElementById('authCheckState') as HTMLElement;
+      const notAuthenticatedState = document.getElementById('notAuthenticatedState') as HTMLElement;
+      const authenticatedContent = document.getElementById('authenticatedContent') as HTMLElement;
+
+      // Check authentication immediately
+      const token = getAuthToken();
+      
+      if (!token) {
+        // Hide loading, show not authenticated state
+        authCheckState.style.display = 'none';
+        notAuthenticatedState.style.display = 'block';
+      } else {
+        // Hide loading, show authenticated content
+        authCheckState.style.display = 'none';
+        authenticatedContent.style.display = 'block';
+      }
+
+      const uploadForm = document.getElementById('uploadForm') as HTMLFormElement;
+      const fileInput = document.getElementById('sound_file') as HTMLInputElement;
+      const fileUploadArea = document.getElementById('fileUploadArea') as HTMLElement;
+      const uploadPlaceholder = fileUploadArea.querySelector('.upload-placeholder') as HTMLElement;
+      const fileInfo = document.getElementById('fileInfo') as HTMLElement;
+      const fileName = document.getElementById('fileName') as HTMLElement;
+      const removeFileBtn = document.getElementById('removeFile') as HTMLButtonElement;
+      const errorMessage = document.getElementById('errorMessage') as HTMLDivElement;
+      const successMessage = document.getElementById('successMessage') as HTMLDivElement;
+      const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
+
+      // File upload area click
+      fileUploadArea.addEventListener('click', () => {
+        if (!fileInfo.style.display || fileInfo.style.display === 'none') {
+          fileInput.click();
+        }
+      });
+
+      // File input change
+      fileInput.addEventListener('change', (e) => {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (file) {
+          if (file.size > 10 * 1024 * 1024) {
+            errorMessage.textContent = 'File size must be less than 10MB';
+            errorMessage.style.display = 'block';
+            fileInput.value = '';
+            return;
+          }
+          
+          fileName.textContent = file.name;
+          uploadPlaceholder.style.display = 'none';
+          fileInfo.style.display = 'flex';
+        }
+      });
+
+      // Remove file
+      removeFileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        fileInput.value = '';
+        uploadPlaceholder.style.display = 'block';
+        fileInfo.style.display = 'none';
+      });
+
+      // Drag and drop
+      fileUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        fileUploadArea.classList.add('drag-over');
+      });
+
+      fileUploadArea.addEventListener('dragleave', () => {
+        fileUploadArea.classList.remove('drag-over');
+      });
+
+      fileUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileUploadArea.classList.remove('drag-over');
+        
+        const file = e.dataTransfer?.files[0];
+        if (file) {
+          if (file.size > 10 * 1024 * 1024) {
+            errorMessage.textContent = 'File size must be less than 10MB';
+            errorMessage.style.display = 'block';
+            return;
+          }
+          
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(file);
+          fileInput.files = dataTransfer.files;
+          
+          fileName.textContent = file.name;
+          uploadPlaceholder.style.display = 'none';
+          fileInfo.style.display = 'flex';
+        }
+      });
+
+      // Form submit
+      uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const buttonText = submitBtn.querySelector('.button-text') as HTMLElement;
+        const buttonLoader = submitBtn.querySelector('.button-loader') as HTMLElement;
+        
+        errorMessage.style.display = 'none';
+        successMessage.style.display = 'none';
+        
+        buttonText.style.display = 'none';
+        buttonLoader.style.display = 'inline-block';
+        submitBtn.disabled = true;
+
+        const formData = new FormData(uploadForm);
+        const file = fileInput.files?.[0];
+        
+        if (!file) {
+          errorMessage.textContent = 'Please select an audio file';
+          errorMessage.style.display = 'block';
+          buttonText.style.display = 'inline';
+          buttonLoader.style.display = 'none';
+          submitBtn.disabled = false;
+          return;
+        }
+
+        const uploadData = new FormData();
+        uploadData.append('name', formData.get('name') as string);
+        uploadData.append('sound_file', file);
+        
+        if (formData.get('category')) {
+          uploadData.append('category', formData.get('category') as string);
+        }
+        
+        if (formData.get('tags')) {
+          uploadData.append('tag', formData.get('tags') as string);
+        }
+
+        try {
+          const result = await uploadSound(token!, uploadData);
+          
+          if (result) {
+            successMessage.textContent = 'Sound uploaded successfully! Redirecting...';
+            successMessage.style.display = 'block';
+            
+            setTimeout(() => {
+              const soundNameSlug = result.name.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
+              window.location.href = `/instant/${soundNameSlug}-${result.id}`;
+            }, 1500);
+          } else {
+            throw new Error('Upload failed');
+          }
+        } catch (error: any) {
+          errorMessage.textContent = error.message || 'Upload failed. Please try again.';
+          errorMessage.style.display = 'block';
+        } finally {
+          buttonText.style.display = 'inline';
+          buttonLoader.style.display = 'none';
+          submitBtn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  .auth-check-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    color: var(--text-secondary);
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-color);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .not-authenticated-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 300px);
+    padding: 3rem 1rem;
+    width: 100%;
+  }
+
+  .auth-required-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .auth-required-card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: 3.5rem 3rem;
+    text-align: center;
+    width: 100%;
+    border: 1px solid var(--border-color);
+  }
+
+  .auth-icon-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .auth-icon-wrapper svg {
+    color: var(--primary-color);
+    background: rgba(52, 152, 219, 0.1);
+    padding: 1.5rem;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+  }
+
+  .auth-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .auth-description {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .auth-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+
+  .auth-actions .auth-button {
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 160px;
+    justify-content: center;
+  }
+
+  .auth-actions .auth-button.primary {
+    background: var(--primary-color);
+    color: var(--white);
+    border: 2px solid var(--primary-color);
+  }
+
+  .auth-actions .auth-button.primary:hover {
+    background: #2980b9;
+    border-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+  }
+
+  .auth-actions .auth-button.secondary {
+    background: var(--white);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+  }
+
+  .auth-actions .auth-button.secondary:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+  }
+
+  .auth-benefits {
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .benefits-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+  }
+
+  .benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    text-align: left;
+  }
+
+  .benefits-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .benefits-list li svg {
+    color: var(--secondary-color);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 768px) {
+    .auth-required-card {
+      padding: 2.5rem 2rem;
+    }
+
+    .auth-title {
+      font-size: 1.75rem;
+    }
+
+    .auth-description {
+      font-size: 1rem;
+    }
+
+    .auth-actions {
+      flex-direction: column;
+    }
+
+    .auth-actions .auth-button {
+      width: 100%;
+    }
+
+    .benefits-list {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .not-authenticated-state {
+      min-height: calc(100vh - 250px);
+      padding: 2rem 1rem;
+    }
+  }
+
+  .upload-container {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .upload-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .file-upload-area {
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--bg-light);
+  }
+
+  .file-upload-area:hover {
+    border-color: var(--primary-color);
+    background: rgba(52, 152, 219, 0.05);
+  }
+
+  .file-upload-area.drag-over {
+    border-color: var(--primary-color);
+    background: rgba(52, 152, 219, 0.1);
+  }
+
+  .upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+  }
+
+  .upload-placeholder svg {
+    color: var(--primary-color);
+  }
+
+  .file-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--white);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+  }
+
+  .remove-file {
+    background: var(--danger-color);
+    color: var(--white);
+    border: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+
+  .remove-file:hover {
+    background: #c0392b;
+  }
+
+  .upload-button {
+    padding: 0.875rem 2rem;
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .upload-button:hover:not(:disabled) {
+    background: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  }
+
+  .upload-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  .upload-info-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+  }
+
+  .upload-info-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .guidelines-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .guidelines-list li {
+    padding-left: 1.5rem;
+    position: relative;
+    color: var(--text-secondary);
+  }
+
+  .guidelines-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--secondary-color);
+    font-weight: 700;
+  }
+
+  @media (max-width: 968px) {
+    .upload-container {
+      grid-template-columns: 1fr;
+    }
+
+    .upload-info-card {
+      position: static;
+    }
+  }
+</style>
+

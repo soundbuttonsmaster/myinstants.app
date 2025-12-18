@@ -1,0 +1,308 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SoundButton from '../components/SoundButton.astro';
+import { fetchSounds } from '../lib/api';
+
+// Fetch a large pool of sounds for random selection
+const soundsData = await fetchSounds({ page_size: 200 });
+
+// Get a random sound to display initially
+function getRandomSound(sounds: any[]) {
+  if (sounds.length === 0) return null;
+  const randomIndex = Math.floor(Math.random() * sounds.length);
+  return sounds[randomIndex];
+}
+
+const initialRandomSound = getRandomSound(soundsData.results);
+
+// SEO Meta Data
+const pageTitle = 'Play Random Sound - Random Sound Button Generator | Myinstants';
+const pageDescription = 'Play random sound buttons instantly! Click the button to hear a random sound effect, meme sound, or audio clip from our collection of 100,000+ sounds.';
+const pageKeywords = 'random sound, play random, random sound button, random sound generator, random audio, random sound effect';
+const canonicalUrl = 'https://myinstants.app/play-random';
+const ogImage = 'https://myinstants.app/images/og-image.jpg';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>{pageTitle}</title>
+    <meta name="title" content={pageTitle} />
+    <meta name="description" content={pageDescription} />
+    <meta name="keywords" content={pageKeywords} />
+    <meta name="author" content="Myinstants" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Myinstants" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    
+    <!-- Additional SEO Tags -->
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Play Random Sound",
+      "description": pageDescription,
+      "url": canonicalUrl
+    })} />
+    
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <Header />
+    
+    <main class="main-content">
+      <div class="sounds-section">
+        <div class="section-header">
+          <div class="section-title-wrapper">
+            <h2 class="section-title">Play Random Sound</h2>
+          </div>
+        </div>
+
+        <div class="sounds-grid" id="randomSoundGrid">
+          {initialRandomSound ? (
+            <SoundButton sound={initialRandomSound} />
+          ) : (
+            <p class="no-sounds">No sounds available.</p>
+          )}
+        </div>
+
+        <div class="random-button-container">
+          <button id="playRandomBtn" class="random-button" type="button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+            </svg>
+            Get Another Random Sound
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <Footer />
+
+    <script define:vars={{ sounds: soundsData.results }}>
+      const playRandomBtn = document.getElementById('playRandomBtn') as HTMLButtonElement;
+      const randomSoundGrid = document.getElementById('randomSoundGrid') as HTMLElement;
+      const audioCache = new Map();
+
+      function getRandomSound() {
+        if (sounds.length === 0) return null;
+        const randomIndex = Math.floor(Math.random() * sounds.length);
+        return sounds[randomIndex];
+      }
+
+      function initializeSoundButton(wrapper: HTMLElement, soundId: string, audioUrl: string) {
+        if (!audioUrl) return;
+
+        // Preload audio
+        const audio = new Audio(audioUrl);
+        audioCache.set(soundId, audio);
+
+        // Mouse events
+        wrapper.addEventListener('mousedown', () => {
+          wrapper.classList.add('pressed');
+          const cachedAudio = audioCache.get(soundId);
+          if (cachedAudio) {
+            cachedAudio.currentTime = 0;
+            cachedAudio.play().catch(err => console.error('Audio play failed:', err));
+          }
+        });
+
+        wrapper.addEventListener('mouseup', () => {
+          wrapper.classList.remove('pressed');
+        });
+
+        wrapper.addEventListener('mouseleave', () => {
+          wrapper.classList.remove('pressed');
+        });
+
+        // Touch events for mobile
+        wrapper.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          wrapper.classList.add('pressed');
+          const cachedAudio = audioCache.get(soundId);
+          if (cachedAudio) {
+            cachedAudio.currentTime = 0;
+            cachedAudio.play().catch(err => console.error('Audio play failed:', err));
+          }
+        });
+
+        wrapper.addEventListener('touchend', (e) => {
+          e.preventDefault();
+          wrapper.classList.remove('pressed');
+        });
+      }
+
+      function initializeActionButtons(instantElement: HTMLElement, soundId: string, soundName: string) {
+        // Favorite button
+        const favoriteBtn = instantElement.querySelector('.favorite-btn');
+        if (favoriteBtn) {
+          favoriteBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            console.log('Favorite sound:', soundId);
+          });
+        }
+
+        // Share button
+        const webshareBtn = instantElement.querySelector('.webshare');
+        if (webshareBtn) {
+          webshareBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const soundNameSlug = soundName.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
+            const url = `${window.location.origin}/instant/${soundNameSlug}-${soundId}`;
+            if (navigator.share) {
+              navigator.share({
+                title: soundName,
+                url: url
+              }).catch(err => console.log('Share cancelled'));
+            } else {
+              navigator.clipboard.writeText(url).then(() => {
+                alert('Link copied to clipboard!');
+              }).catch(err => console.error('Failed to copy link:', err));
+            }
+          });
+        }
+      }
+
+      async function loadNewRandomSound() {
+        const sound = getRandomSound();
+        if (!sound) {
+          alert('No sounds available. Please try again later.');
+          return;
+        }
+
+        // Disable button while loading
+        playRandomBtn.disabled = true;
+        const originalHTML = playRandomBtn.innerHTML;
+        playRandomBtn.innerHTML = 'Loading...';
+
+        // Generate color for the button (same as SoundButton component)
+        const colors = ['#CD6839', '#A464C4', '#7B4FA0', '#9370DB', '#7CCD7C', '#D2691E', '#CD853F', '#66CDAA', '#5DADE2', '#8B7355', '#90EE90', '#FF6347', '#9B59B6', '#5DADE2', '#52C77D', '#F39C12', '#E67E22', '#1ABC9C', '#95A5A6', '#7F8C8D', '#E74C3C', '#8E44AD', '#16A085', '#27AE60', '#D35400', '#34495E', '#C0392B', '#6C3483', '#2874A6', '#138D75'];
+        const color = colors[sound.id % colors.length];
+        const buttonId = `sound-${sound.id}`;
+
+        randomSoundGrid.innerHTML = `
+          <div class="instant">
+            <div 
+              class="sprite-wrapper"
+              role="button"
+              aria-label="Play ${sound.name}"
+              data-sound-id="${sound.id}"
+              data-audio-url="${sound.sound_file}"
+              id="${buttonId}"
+            >
+              <button 
+                class="inner-btn" 
+                style="background: ${color};"
+              ></button>
+              <div class="button-ring"></div>
+            </div>
+            <a href="/instant/${sound.name.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '')}-${sound.id}" class="instant-link link-secondary">${sound.name}</a>
+            <div class="result-page-instant-sharebox">
+              <button type="button" class="instant-action-button favorite-btn" data-sound-id="${sound.id}" title="Add ${sound.name} to favorites">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="${sound.is_favorited ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" style="font-size: 1.3rem; color: red;">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+              </button>
+              <button type="button" class="instant-action-button webshare" data-sound-id="${sound.id}" title="Share ${sound.name}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="font-size: 1.3rem; color: cornflowerblue;">
+                  <circle cx="18" cy="5" r="3"/>
+                  <circle cx="6" cy="12" r="3"/>
+                  <circle cx="18" cy="19" r="3"/>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                </svg>
+              </button>
+              <a href="${sound.sound_file}" download="${sound.name}" class="instant-action-button download-btn" title="Download ${sound.name}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="font-size: 1.3rem; color: #2ECC71;">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        `;
+
+        // Initialize the sound button
+        const wrapper = document.getElementById(buttonId) as HTMLElement;
+        const instantElement = randomSoundGrid.querySelector('.instant') as HTMLElement;
+        
+        if (wrapper && sound.sound_file) {
+          initializeSoundButton(wrapper, sound.id.toString(), sound.sound_file);
+        }
+
+        if (instantElement) {
+          initializeActionButtons(instantElement, sound.id.toString(), sound.name);
+        }
+
+        // Re-enable button
+        playRandomBtn.disabled = false;
+        playRandomBtn.innerHTML = originalHTML;
+      }
+
+      playRandomBtn.addEventListener('click', loadNewRandomSound);
+    </script>
+  </body>
+</html>
+
+<style>
+  .random-button-container {
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .random-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .random-button:hover:not(:disabled) {
+    background: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  }
+
+  .random-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+</style>
+

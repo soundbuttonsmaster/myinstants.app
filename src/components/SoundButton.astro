@@ -1,0 +1,589 @@
+---
+interface Props {
+  sound: {
+    id: number;
+    name: string;
+    sound_file: string;
+    likes_count?: number;
+    favorites_count?: number;
+    views?: number;
+    is_liked?: boolean;
+    is_favorited?: boolean;
+  };
+}
+
+const { sound } = Astro.props;
+const buttonId = `sound-${sound.id}`;
+
+// Helper function to create URL-friendly slugs
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+}
+
+// Generate vibrant, saturated colors matching competitor
+function generateColor(id: number): string {
+  const colors = [
+    '#CD6839', // Rich brown-orange
+    '#A464C4', // Purple
+    '#7B4FA0', // Darker purple
+    '#9370DB', // Medium purple
+    '#7CCD7C', // Light green
+    '#D2691E', // Chocolate
+    '#CD853F', // Peru
+    '#66CDAA', // Medium aquamarine
+    '#5DADE2', // Light blue
+    '#8B7355', // Brown
+    '#90EE90', // Light green
+    '#FF6347', // Tomato
+    '#9B59B6', // Purple
+    '#5DADE2', // Blue
+    '#52C77D', // Green
+    '#F39C12', // Orange
+    '#E67E22', // Carrot
+    '#1ABC9C', // Turquoise
+    '#95A5A6', // Grey
+    '#7F8C8D', // Grey
+    '#E74C3C', // Red
+    '#8E44AD', // Purple
+    '#16A085', // Teal
+    '#27AE60', // Green
+    '#D35400', // Orange
+    '#34495E', // Dark blue-grey
+    '#C0392B', // Dark red
+    '#6C3483', // Dark purple
+    '#2874A6', // Blue
+    '#138D75'  // Teal
+  ];
+  return colors[id % colors.length];
+}
+
+const buttonColor = generateColor(sound.id);
+---
+
+<div class="instant">
+  <!-- Sprite wrapper with colored button behind -->
+  <div 
+    class="sprite-wrapper"
+    role="button"
+    aria-label={`Play ${sound.name}`}
+    data-sound-id={sound.id}
+    data-audio-url={sound.sound_file}
+    id={buttonId}
+  >
+    <!-- Colored inner button (behind the ring sprite) -->
+    <div 
+      class="inner-btn" 
+      style={`background: ${buttonColor};`}
+    ></div>
+    <!-- Ring sprite overlay (transparent in center) -->
+    <div class="button-ring"></div>
+  </div>
+  
+  <a href={`/instant/${slugify(sound.name)}-${sound.id}`} class="instant-link link-secondary">{sound.name}</a>
+  
+  <div class="result-page-instant-sharebox">
+    <button type="button" class="instant-action-button favorite-btn" data-sound-id={sound.id} title={`Add ${sound.name} to favorites`}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill={sound.is_liked ? "currentColor" : "none"} stroke="currentColor" stroke-width="2" style="font-size: 1.3rem; color: red;">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </button>
+    <button type="button" class="instant-action-button webshare" data-sound-id={sound.id} title={`Share ${sound.name}`}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="font-size: 1.3rem; color: cornflowerblue;">
+        <circle cx="18" cy="5" r="3"/>
+        <circle cx="6" cy="12" r="3"/>
+        <circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+    </button>
+    <a href={sound.sound_file} download={sound.name} class="instant-action-button download-btn" title={`Download ${sound.name}`}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="font-size: 1.3rem; color: #2ECC71;">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+    </a>
+  </div>
+</div>
+
+<style>
+  .instant {
+    position: relative;
+    vertical-align: top;
+    width: 110px;
+    text-align: center;
+    word-wrap: break-word;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Sprite wrapper - contains both the colored button and the ring */
+  .sprite-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 110px;
+    height: 110px;
+    cursor: pointer;
+  }
+
+  /* Colored button behind the ring (shows through transparent center) */
+  .inner-btn {
+    position: absolute;
+    width: 93px;
+    height: 93px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: none;
+    transition: transform 0.1s ease;
+    z-index: 0;
+  }
+
+  /* Ring sprite overlay (transparent in center so color shows through) */
+  .button-ring {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    background: url('/images/transparent_button_small.png') no-repeat 0 0;
+    background-size: 220px 110px; /* 2 frames side by side */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Pressed state - shift to second frame */
+  .sprite-wrapper.pressed .button-ring {
+    background-position: -110px 0;
+  }
+
+  /* Mobile: Keep smaller size */
+  @media (max-width: 768px) {
+    .instant {
+      width: 100px;
+    }
+
+    .sprite-wrapper {
+      width: 100px;
+      height: 100px;
+    }
+
+    .inner-btn {
+      width: 85px;
+      height: 85px;
+    }
+
+    .button-ring {
+      width: 100px;
+      height: 100px;
+      background-size: 200px 100px;
+    }
+
+    .sprite-wrapper.pressed .button-ring {
+      background-position: -100px 0;
+    }
+  }
+
+  .instant-link.link-secondary {
+    text-decoration: underline;
+    color: var(--text-primary);
+    font-size: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 8px;
+    padding-top: 0;
+    min-height: 2.6em; /* Ensure consistent height for 2 lines (16px * 1.3 line-height * 2) */
+    line-height: 1.3;
+    text-align: center;
+    word-break: break-word;
+  }
+
+  .result-page-instant-sharebox {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .instant-action-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s;
+    text-decoration: none;
+  }
+
+  .instant-action-button:hover {
+    opacity: 0.7;
+  }
+
+  .download-btn {
+    display: inline-flex;
+  }
+</style>
+
+<script>
+  function copyInstantLink(url, soundId) {
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = document.getElementById(`copy-button-${soundId}`);
+      if (btn) {
+        const originalTitle = btn.title;
+        btn.title = 'Copied!';
+        setTimeout(() => {
+          btn.title = originalTitle;
+        }, 2000);
+      }
+    });
+  }
+
+  function showShareOptions(title, url, audioUrl, soundId) {
+    if (navigator.share) {
+      navigator.share({
+        title: title,
+        url: url
+      }).catch(err => console.log('Share cancelled'));
+    } else {
+      copyInstantLink(url, soundId);
+    }
+  }
+
+  // Global audio cache and initialization
+  (function() {
+    // Initialize global audio cache
+    if (typeof window !== 'undefined' && !window.soundButtonAudioCache) {
+      window.soundButtonAudioCache = new Map();
+      window.currentPlayingAudio = null;
+    }
+    
+    // Function to play audio - optimized for fast playback
+    function playAudio(audioUrl, soundId) {
+      if (!audioUrl) {
+        console.error('No audio URL provided for sound:', soundId);
+        return;
+      }
+
+      // Stop any currently playing audio globally
+      if (window.currentPlayingAudio) {
+        try {
+          window.currentPlayingAudio.pause();
+          window.currentPlayingAudio.currentTime = 0;
+        } catch (e) {
+          // Ignore errors
+        }
+      }
+
+      // Stop any cached audio for this sound
+      const cachedAudio = window.soundButtonAudioCache.get(soundId);
+      if (cachedAudio) {
+        try {
+          cachedAudio.pause();
+          cachedAudio.currentTime = 0;
+        } catch (e) {
+          // Ignore errors
+        }
+      }
+
+      // Try to use cached audio first if available and not errored
+      if (cachedAudio && cachedAudio.readyState >= 2) {
+        try {
+          cachedAudio.currentTime = 0;
+          const playPromise = cachedAudio.play();
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                window.currentPlayingAudio = cachedAudio;
+              })
+              .catch(() => {
+                // If cached fails, create new instance
+                createNewAudioInstance(audioUrl, soundId);
+              });
+          }
+          return cachedAudio;
+        } catch (e) {
+          // If cached fails, create new instance
+          createNewAudioInstance(audioUrl, soundId);
+        }
+      } else {
+        // Create new audio instance
+        createNewAudioInstance(audioUrl, soundId);
+      }
+    }
+
+    function createNewAudioInstance(audioUrl, soundId) {
+      try {
+        const audio = new Audio();
+        
+        // Set up error handler before setting source
+        audio.addEventListener('error', (e) => {
+          const errorCode = audio.error?.code;
+          const errorMessage = audio.error?.message || 'Unknown error';
+          console.error('Audio error:', errorMessage, 'Code:', errorCode, 'URL:', audioUrl);
+          
+          // Error code 4 = MEDIA_ERR_SRC_NOT_SUPPORTED
+          if (errorCode === 4) {
+            console.warn('Audio format not supported, trying without CORS:', audioUrl);
+            // Try direct URL without CORS
+            tryDirectPlay(audioUrl, soundId);
+          } else {
+            // For other errors, also try direct play
+            tryDirectPlay(audioUrl, soundId);
+          }
+        });
+        
+        // Set up load handler - wait for audio to be ready
+        let playAttempted = false;
+        const attemptPlay = () => {
+          if (playAttempted) return;
+          playAttempted = true;
+          
+          audio.currentTime = 0;
+          const playPromise = audio.play();
+          
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                window.currentPlayingAudio = audio;
+                window.soundButtonAudioCache.set(soundId, audio);
+              })
+              .catch(err => {
+                console.error('Audio play failed after load:', err, 'URL:', audioUrl);
+                // Try direct play without CORS
+                tryDirectPlay(audioUrl, soundId);
+              });
+          }
+        };
+        
+        // Try to play when enough data is loaded
+        audio.addEventListener('canplay', attemptPlay, { once: true });
+        audio.addEventListener('canplaythrough', attemptPlay, { once: true });
+        
+        // Set source and attributes
+        audio.crossOrigin = 'anonymous';
+        audio.preload = 'auto';
+        audio.src = audioUrl;
+        
+        // Load the audio
+        audio.load();
+        
+        // Also try immediate play (for already cached/loaded audio)
+        setTimeout(() => {
+          if (!playAttempted && audio.readyState >= 2) {
+            attemptPlay();
+          }
+        }, 100);
+        
+        return audio;
+      } catch (err) {
+        console.error('Failed to create audio:', err, 'URL:', audioUrl);
+        // Try direct play as last resort
+        tryDirectPlay(audioUrl, soundId);
+        return null;
+      }
+    }
+
+    function tryDirectPlay(audioUrl, soundId) {
+      try {
+        const directAudio = new Audio();
+        
+        // Set up error handler
+        directAudio.addEventListener('error', (e) => {
+          console.error('Direct audio error:', directAudio.error?.message || 'Unknown error', 'URL:', audioUrl);
+        });
+        
+        // Set source without CORS
+        directAudio.src = audioUrl;
+        directAudio.currentTime = 0;
+        
+        // Wait for audio to be ready
+        const attemptDirectPlay = () => {
+          directAudio.currentTime = 0;
+          directAudio.play()
+            .then(() => {
+              window.currentPlayingAudio = directAudio;
+              window.soundButtonAudioCache.set(soundId, directAudio);
+            })
+            .catch(err => {
+              console.error('Direct audio play failed:', err, 'URL:', audioUrl);
+              // Last resort: log warning
+              console.warn('Unable to play audio. This may be due to CORS restrictions or unsupported format. URL:', audioUrl);
+            });
+        };
+        
+        // Try when ready
+        directAudio.addEventListener('canplay', attemptDirectPlay, { once: true });
+        directAudio.addEventListener('canplaythrough', attemptDirectPlay, { once: true });
+        
+        // Load the audio
+        directAudio.load();
+        
+        // Also try immediate play if already ready
+        setTimeout(() => {
+          if (directAudio.readyState >= 2) {
+            attemptDirectPlay();
+          }
+        }, 100);
+      } catch (err) {
+        console.error('Failed to create direct audio:', err);
+      }
+    }
+
+    function initializeSoundButton(wrapper) {
+      // Skip if already initialized
+      if (wrapper.dataset.initialized === 'true') return;
+      
+      const audioUrl = wrapper.getAttribute('data-audio-url');
+      const soundId = wrapper.getAttribute('data-sound-id');
+      
+      if (!audioUrl || !soundId) return;
+
+      // Mark as initialized
+      wrapper.dataset.initialized = 'true';
+
+      // Preload audio for faster subsequent plays
+      if (!window.soundButtonAudioCache.has(soundId)) {
+        try {
+          const audio = new Audio(audioUrl);
+          audio.crossOrigin = 'anonymous'; // Handle CORS for S3
+          audio.preload = 'auto';
+          // Start loading the audio
+          audio.load();
+          window.soundButtonAudioCache.set(soundId, audio);
+        } catch (err) {
+          console.error('Failed to preload audio:', err);
+        }
+      }
+
+      // Click event (works for both mouse and touch)
+      wrapper.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        wrapper.classList.add('pressed');
+        playAudio(audioUrl, soundId);
+        setTimeout(() => {
+          wrapper.classList.remove('pressed');
+        }, 150);
+      });
+
+      // Mouse events for visual feedback
+      wrapper.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        wrapper.classList.add('pressed');
+      });
+
+      wrapper.addEventListener('mouseup', () => {
+        wrapper.classList.remove('pressed');
+      });
+
+      wrapper.addEventListener('mouseleave', () => {
+        wrapper.classList.remove('pressed');
+      });
+
+      // Touch events for mobile
+      wrapper.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        wrapper.classList.add('pressed');
+        playAudio(audioUrl, soundId);
+      });
+
+      wrapper.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        wrapper.classList.remove('pressed');
+      });
+    }
+
+    // Initialize function that can be called multiple times safely
+    function initAllSoundButtons() {
+      const soundButtons = document.querySelectorAll('.sprite-wrapper:not([data-initialized="true"])');
+      soundButtons.forEach(initializeSoundButton);
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAllSoundButtons);
+    } else {
+      // DOM already loaded
+      initAllSoundButtons();
+    }
+
+    // Also initialize any buttons added dynamically
+    if (typeof MutationObserver !== 'undefined') {
+      const observer = new MutationObserver(() => {
+        initAllSoundButtons();
+      });
+
+      if (document.body) {
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+      }
+    }
+  })();
+
+  // Action buttons initialization
+  function initActionButtons() {
+    // Action buttons
+    document.querySelectorAll('.favorite-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const soundId = btn.getAttribute('data-sound-id');
+        console.log('Favorite sound:', soundId);
+      });
+    });
+
+    document.querySelectorAll('.instant-action-button:not(.favorite-btn):not(.webshare)').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const soundId = btn.getAttribute('data-sound-id');
+        // Helper to create slug
+        function slugify(text) {
+          return text.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
+        }
+        const soundName = btn.closest('.instant')?.querySelector('.instant-link')?.textContent || '';
+        const url = `${window.location.origin}/instant/${slugify(soundName)}-${soundId}`;
+        copyInstantLink(url, soundId);
+      });
+    });
+
+    document.querySelectorAll('.webshare').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const soundId = btn.getAttribute('data-sound-id');
+        // Helper to create slug
+        function slugify(text) {
+          return text.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
+        }
+        const soundName = btn.closest('.instant')?.querySelector('.instant-link')?.textContent || '';
+        const url = `${window.location.origin}/instant/${slugify(soundName)}-${soundId}`;
+        showShareOptions('Sound Button', url, '', soundId);
+      });
+    });
+  }
+
+  // Initialize action buttons on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initActionButtons);
+  } else {
+    initActionButtons();
+  }
+</script>
