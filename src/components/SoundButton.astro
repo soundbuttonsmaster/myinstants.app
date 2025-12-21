@@ -173,27 +173,27 @@ const buttonColor = generateColor(sound.id);
   /* Mobile: Keep smaller size */
   @media (max-width: 768px) {
     .instant {
-      width: 100px;
+      width: 75px;
     }
 
     .sprite-wrapper {
-      width: 100px;
-      height: 100px;
+      width: 75px;
+      height: 75px;
     }
 
     .inner-btn {
-      width: 85px;
-      height: 85px;
+      width: 64px;
+      height: 64px;
     }
 
     .button-ring {
-      width: 100px;
-      height: 100px;
-      background-size: 200px 100px;
+      width: 75px;
+      height: 75px;
+      background-size: 150px 75px;
     }
 
     .sprite-wrapper.pressed .button-ring {
-      background-position: -100px 0;
+      background-position: -75px 0;
     }
   }
 
@@ -232,14 +232,45 @@ const buttonColor = generateColor(sound.id);
     justify-content: center;
     transition: opacity 0.2s;
     text-decoration: none;
+    min-width: 28px;
+    min-height: 28px;
   }
 
   .instant-action-button:hover {
     opacity: 0.7;
   }
 
+  .instant-action-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
   .download-btn {
     display: inline-flex;
+  }
+
+  /* Mobile: Make action buttons closer together and closer to title */
+  @media (max-width: 768px) {
+    .instant-link.link-secondary {
+      margin-bottom: 0;
+    }
+
+    .result-page-instant-sharebox {
+      gap: 2px;
+      margin-top: 2px;
+      padding: 0 4px;
+    }
+
+    .instant-action-button {
+      padding: 4px;
+      min-width: 28px;
+      min-height: 28px;
+    }
+
+    .instant-action-button svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 </style>
 
