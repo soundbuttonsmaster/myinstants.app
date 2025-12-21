@@ -12,6 +12,9 @@ interface Props {
   };
 }
 
+// API base URL for constructing audio endpoint
+const API_BASE_URL = 'http://play.soundboard.cloud/api/myinstants.app';
+
 const { sound } = Astro.props;
 const buttonId = `sound-${sound.id}`;
 
@@ -72,7 +75,7 @@ const buttonColor = generateColor(sound.id);
     role="button"
     aria-label={`Play ${sound.name}`}
     data-sound-id={sound.id}
-    data-audio-url={sound.sound_file}
+    data-audio-url={`${API_BASE_URL}/sounds/${sound.id}/audio`}
     id={buttonId}
   >
     <!-- Colored inner button (behind the ring sprite) -->
@@ -265,15 +268,14 @@ const buttonColor = generateColor(sound.id);
     }
   }
 
-  // Global audio cache and initialization
+  // Global audio playback management
   (function() {
-    // Initialize global audio cache
-    if (typeof window !== 'undefined' && !window.soundButtonAudioCache) {
-      window.soundButtonAudioCache = new Map();
+    // Initialize global current playing audio tracker
+    if (typeof window !== 'undefined' && window.currentPlayingAudio === undefined) {
       window.currentPlayingAudio = null;
     }
     
-    // Function to play audio - optimized for fast playback
+    // Function to play audio - optimized for S3 URLs (matching working project approach)
     function playAudio(audioUrl, soundId) {
       if (!audioUrl) {
         console.error('No audio URL provided for sound:', soundId);
@@ -285,164 +287,89 @@ const buttonColor = generateColor(sound.id);
         try {
           window.currentPlayingAudio.pause();
           window.currentPlayingAudio.currentTime = 0;
+          window.currentPlayingAudio.src = ""; // Clear source to stop loading
         } catch (e) {
           // Ignore errors
         }
       }
 
-      // Stop any cached audio for this sound
-      const cachedAudio = window.soundButtonAudioCache.get(soundId);
-      if (cachedAudio) {
-        try {
-          cachedAudio.pause();
-          cachedAudio.currentTime = 0;
-        } catch (e) {
-          // Ignore errors
+      // Create Audio element directly with URL (same as working project)
+      const audio = new Audio(audioUrl);
+      audio.preload = 'auto';
+      
+      // Track if we've resolved the load
+      let resolved = false;
+      
+      // Cleanup function
+      let timeoutId = null;
+      const cleanup = () => {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
         }
-      }
-
-      // Try to use cached audio first if available and not errored
-      if (cachedAudio && cachedAudio.readyState >= 2) {
-        try {
-          cachedAudio.currentTime = 0;
-          const playPromise = cachedAudio.play();
-          if (playPromise !== undefined) {
-            playPromise
-              .then(() => {
-                window.currentPlayingAudio = cachedAudio;
-              })
-              .catch(() => {
-                // If cached fails, create new instance
-                createNewAudioInstance(audioUrl, soundId);
-              });
-          }
-          return cachedAudio;
-        } catch (e) {
-          // If cached fails, create new instance
-          createNewAudioInstance(audioUrl, soundId);
-        }
-      } else {
-        // Create new audio instance
-        createNewAudioInstance(audioUrl, soundId);
-      }
-    }
-
-    function createNewAudioInstance(audioUrl, soundId) {
-      try {
-        const audio = new Audio();
+        audio.removeEventListener('loadstart', attemptPlay);
+        audio.removeEventListener('loadedmetadata', attemptPlay);
+        audio.removeEventListener('loadeddata', attemptPlay);
+        audio.removeEventListener('canplay', attemptPlay);
+        audio.removeEventListener('error', onError);
+      };
+      
+      // Function to attempt playback immediately
+      const attemptPlay = () => {
+        if (resolved) return;
         
-        // Set up error handler before setting source
-        audio.addEventListener('error', (e) => {
-          const errorCode = audio.error?.code;
-          const errorMessage = audio.error?.message || 'Unknown error';
-          console.error('Audio error:', errorMessage, 'Code:', errorCode, 'URL:', audioUrl);
-          
-          // Error code 4 = MEDIA_ERR_SRC_NOT_SUPPORTED
-          if (errorCode === 4) {
-            console.warn('Audio format not supported, trying without CORS:', audioUrl);
-            // Try direct URL without CORS
-            tryDirectPlay(audioUrl, soundId);
-          } else {
-            // For other errors, also try direct play
-            tryDirectPlay(audioUrl, soundId);
-          }
-        });
+        resolved = true;
+        cleanup();
+        audio.currentTime = 0;
         
-        // Set up load handler - wait for audio to be ready
-        let playAttempted = false;
-        const attemptPlay = () => {
-          if (playAttempted) return;
-          playAttempted = true;
-          
-          audio.currentTime = 0;
-          const playPromise = audio.play();
-          
-          if (playPromise !== undefined) {
-            playPromise
-              .then(() => {
-                window.currentPlayingAudio = audio;
-                window.soundButtonAudioCache.set(soundId, audio);
-              })
-              .catch(err => {
-                console.error('Audio play failed after load:', err, 'URL:', audioUrl);
-                // Try direct play without CORS
-                tryDirectPlay(audioUrl, soundId);
-              });
-          }
-        };
+        // Try to play immediately - browser will handle buffering
+        const playPromise = audio.play();
         
-        // Try to play when enough data is loaded
-        audio.addEventListener('canplay', attemptPlay, { once: true });
-        audio.addEventListener('canplaythrough', attemptPlay, { once: true });
-        
-        // Set source and attributes
-        audio.crossOrigin = 'anonymous';
-        audio.preload = 'auto';
-        audio.src = audioUrl;
-        
-        // Load the audio
-        audio.load();
-        
-        // Also try immediate play (for already cached/loaded audio)
-        setTimeout(() => {
-          if (!playAttempted && audio.readyState >= 2) {
-            attemptPlay();
-          }
-        }, 100);
-        
-        return audio;
-      } catch (err) {
-        console.error('Failed to create audio:', err, 'URL:', audioUrl);
-        // Try direct play as last resort
-        tryDirectPlay(audioUrl, soundId);
-        return null;
-      }
-    }
-
-    function tryDirectPlay(audioUrl, soundId) {
-      try {
-        const directAudio = new Audio();
-        
-        // Set up error handler
-        directAudio.addEventListener('error', (e) => {
-          console.error('Direct audio error:', directAudio.error?.message || 'Unknown error', 'URL:', audioUrl);
-        });
-        
-        // Set source without CORS
-        directAudio.src = audioUrl;
-        directAudio.currentTime = 0;
-        
-        // Wait for audio to be ready
-        const attemptDirectPlay = () => {
-          directAudio.currentTime = 0;
-          directAudio.play()
+        if (playPromise !== undefined) {
+          playPromise
             .then(() => {
-              window.currentPlayingAudio = directAudio;
-              window.soundButtonAudioCache.set(soundId, directAudio);
+              window.currentPlayingAudio = audio;
+              
+              // Clean up when audio ends
+              audio.addEventListener('ended', () => {
+                if (window.currentPlayingAudio === audio) {
+                  window.currentPlayingAudio = null;
+                }
+              }, { once: true });
             })
-            .catch(err => {
-              console.error('Direct audio play failed:', err, 'URL:', audioUrl);
-              // Last resort: log warning
-              console.warn('Unable to play audio. This may be due to CORS restrictions or unsupported format. URL:', audioUrl);
+            .catch(error => {
+              // Play failed - log but don't retry
+              console.warn('Audio play failed:', error.message || error, 'URL:', audioUrl);
             });
-        };
+        }
+      };
+      
+      // Error handler - even on error, try to play if we have any data
+      const onError = (e) => {
+        if (resolved) return;
         
-        // Try when ready
-        directAudio.addEventListener('canplay', attemptDirectPlay, { once: true });
-        directAudio.addEventListener('canplaythrough', attemptDirectPlay, { once: true });
+        const error = audio.error;
+        console.warn('Audio load error:', error?.message || 'Unknown error', 'URL:', audioUrl);
         
-        // Load the audio
-        directAudio.load();
-        
-        // Also try immediate play if already ready
-        setTimeout(() => {
-          if (directAudio.readyState >= 2) {
-            attemptDirectPlay();
-          }
-        }, 100);
-      } catch (err) {
-        console.error('Failed to create direct audio:', err);
-      }
+        // Even on error, try to play if we have any data (matching working project behavior)
+        if (audio.readyState >= 0) { // HAVE_NOTHING = 0, so try anyway
+          attemptPlay();
+        }
+      };
+      
+      // Listen to the earliest possible events for fastest response (same as working project)
+      audio.addEventListener('loadstart', attemptPlay, { once: true });
+      audio.addEventListener('loadedmetadata', attemptPlay, { once: true });
+      audio.addEventListener('loadeddata', attemptPlay, { once: true });
+      audio.addEventListener('canplay', attemptPlay, { once: true });
+      audio.addEventListener('error', onError, { once: true });
+      
+      // Very short timeout - try to play almost immediately (same as working project: 100ms)
+      timeoutId = setTimeout(() => {
+        if (!resolved) {
+          attemptPlay();
+        }
+      }, 100);
     }
 
     function initializeSoundButton(wrapper) {
@@ -456,20 +383,6 @@ const buttonColor = generateColor(sound.id);
 
       // Mark as initialized
       wrapper.dataset.initialized = 'true';
-
-      // Preload audio for faster subsequent plays
-      if (!window.soundButtonAudioCache.has(soundId)) {
-        try {
-          const audio = new Audio(audioUrl);
-          audio.crossOrigin = 'anonymous'; // Handle CORS for S3
-          audio.preload = 'auto';
-          // Start loading the audio
-          audio.load();
-          window.soundButtonAudioCache.set(soundId, audio);
-        } catch (err) {
-          console.error('Failed to preload audio:', err);
-        }
-      }
 
       // Click event (works for both mouse and touch)
       wrapper.addEventListener('click', (e) => {

@@ -1,0 +1,529 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// SEO Meta Data
+const pageTitle = 'About Myinstants - The Ultimate Sound Buttons & Meme Soundboard Platform';
+const pageDescription = 'Myinstants is the premier sound button and meme soundboard creation platform. Access thousands of prank sounds, create custom soundboards, and share them instantly - all free and unblocked.';
+const pageKeywords = 'about myinstants, sound buttons platform, meme soundboard, prank sounds, custom soundboard, unblocked soundboard';
+const canonicalUrl = 'https://myinstants.app/about';
+const ogImage = 'https://myinstants.app/images/og-image.jpg';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>{pageTitle}</title>
+    <meta name="title" content={pageTitle} />
+    <meta name="description" content={pageDescription} />
+    <meta name="keywords" content={pageKeywords} />
+    <meta name="author" content="Myinstants" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Myinstants" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    
+    <!-- Additional SEO Tags -->
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "name": "About Myinstants",
+      "description": pageDescription,
+      "url": canonicalUrl,
+      "mainEntity": {
+        "@type": "WebApplication",
+        "name": "Myinstants",
+        "applicationCategory": "EntertainmentApplication",
+        "description": "The ultimate sound buttons and meme soundboard platform"
+      }
+    })} />
+    
+    <!-- Favicon Links -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <Header />
+    
+    <main class="main-content">
+      <!-- Breadcrumbs -->
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol class="breadcrumb-list">
+          <li class="breadcrumb-item">
+            <a href="/">Home</a>
+          </li>
+          <li class="breadcrumb-item breadcrumb-active" aria-current="page">
+            About
+          </li>
+        </ol>
+      </nav>
+
+      <!-- Hero Section -->
+      <div class="about-hero">
+        <h1 class="about-title">Myinstants - The Ultimate Sound Buttons & Meme Soundboard Platform</h1>
+        <p class="about-intro">
+          Myinstants is a great resource for sound buttons and audio clips based on popular memes. Whether you're a streamer, gamer, or content creator, Myinstants gives you instant access to thousands of funny sounds, audio effects, and trending soundboards all free and completely online.
+        </p>
+        <p class="about-intro">
+          Discover everything from classic sound effects like whooshes and laughs to the latest viral audio memes. With unlimited access and no downloads required, you can create custom soundboards anytime, anywhere.
+        </p>
+      </div>
+
+      <!-- What Is Myinstants Section -->
+      <section class="about-section">
+        <h2 class="section-heading">What Is Myinstants?</h2>
+        <p class="section-text">
+          Myinstants is the premier sound button and meme soundboard creation platform. Access thousands of prank sounds and audio effects, then instantly create your own custom soundboards no downloads, no setup required. Build unlimited personalized soundboards, play sound buttons, and share them with friends completely free, from any device.
+        </p>
+        <p class="section-text">
+          Every sound is carefully organized into categories and regularly updated with fresh content. Whether you're looking for classic meme sounds or the newest trending audio clips, Myinstants has everything you need to create an entertaining soundboard experience.
+        </p>
+      </section>
+
+      <!-- Key Features Section -->
+      <section class="about-section">
+        <h2 class="section-heading">Key Features</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🎵</div>
+            <h3 class="feature-title">Unlimited Number of Sound Buttons</h3>
+            <p class="feature-text">
+              We have a huge selection of sound buttons with many categories prank, memes, funny sounds, and the most popular viral sound available for play & download to your device.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🎨</div>
+            <h3 class="feature-title">Build Your Own Soundboard</h3>
+            <p class="feature-text">
+              You can build your very own custom meme soundboard from scratch! You decide how you want to organize your buttons by categories and choose which ones to add to your board to create your personalised combination.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🔓</div>
+            <h3 class="feature-title">Access Soundboard Unblocked Anytime</h3>
+            <p class="feature-text">
+              Have complete unblocked access to a soundboard from anywhere! No limits on numbers! No hidden charges.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📤</div>
+            <h3 class="feature-title">Instantly Share</h3>
+            <p class="feature-text">
+              Instantly share your custom soundboards with your friends! Perfect for gaming, streaming, content creation, and entertainment.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🌐</div>
+            <h3 class="feature-title">No Downloads Necessary</h3>
+            <p class="feature-text">
+              You can use everything directly in your browser. You can start using any sound buttons immediately without any installation or setup required.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h3 class="feature-title">Mobile-Friendly</h3>
+            <p class="feature-text">
+              You have access to Myinstants sound buttons from mobile phones, tablets and desktops! This allows for an unblocked soundboard experience anywhere you go.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works Section -->
+      <section class="about-section">
+        <h2 class="section-heading">How It Works</h2>
+        <p class="section-subtitle">Getting Started with Myinstants Sound Buttons in 3 Easy Steps</p>
+        
+        <div class="steps-container">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <h3 class="step-title">Browse</h3>
+            <p class="step-text">
+              Browse through the entire library of sound buttons, meme sounds, and prank sounds and use our search or category options.
+            </p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <h3 class="step-title">Create</h3>
+            <p class="step-text">
+              Select your favourite sound buttons to create your custom soundboard. Arrange them to your preference.
+            </p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <h3 class="step-title">Play & Share</h3>
+            <p class="step-text">
+              You can start playing with your soundboard immediately & share it with your friends. There are no limits to your enjoyment because you can create a unique soundboard collection made up of sounds that are personal to you!
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Who Uses Myinstants Section -->
+      <section class="about-section">
+        <h2 class="section-heading">Who Uses Myinstants?</h2>
+        <p class="section-text">
+          Myinstants serves content creators, streamers, gamers, educators & people who are simply fans of entertainment! If you need a list of fun sounds to prank your friends with, or a list of sound effects for your stream or if you are creating content Myinstants provides you with the best blocked experience of all soundboards!
+        </p>
+        <p class="section-text">
+          Experience the benefits that millions of Myinstants users are currently enjoying & Join the Myinstants Community today!
+        </p>
+      </section>
+
+      <!-- Call to Action Section -->
+      <section class="cta-section">
+        <h2 class="cta-title">Create Your Custom Soundboard Now!</h2>
+        <p class="cta-text">
+          Why not experience the ultimate sound buttons & meme soundboard now? You can create your custom soundboard on Myinstants today! With thousands of prank sounds available at your fingertips, as well as funny audio effects & viral meme soundboards, download your soundboard now!
+        </p>
+        <div class="cta-buttons">
+          <a href="/" class="cta-button-primary">Explore Sound Buttons</a>
+          <a href="/new" class="cta-button-secondary">Discover New Sounds</a>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  /* Breadcrumbs */
+  .breadcrumbs {
+    margin-bottom: 1.5rem;
+  }
+
+  .breadcrumb-list {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumb-item:not(:last-child)::after {
+    content: '/';
+    margin-left: 0.5rem;
+    color: var(--text-secondary);
+  }
+
+  .breadcrumb-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .breadcrumb-item a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+  }
+
+  .breadcrumb-active {
+    color: var(--text-primary);
+  }
+
+  /* Hero Section */
+  .about-hero {
+    text-align: center;
+    margin: 3rem 0 4rem;
+    padding: 2rem 0;
+  }
+
+  .about-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .about-intro {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 900px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.8;
+  }
+
+  /* Section Styles */
+  .about-section {
+    margin: 4rem 0;
+    padding: 2rem 0;
+  }
+
+  .section-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .section-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 3rem;
+    font-weight: 500;
+  }
+
+  .section-text {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    max-width: 900px;
+    margin: 0 auto 1.5rem;
+    text-align: center;
+  }
+
+  /* Features Grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .feature-card {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .feature-text {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* Steps Container */
+  .steps-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .step-card {
+    background: var(--white);
+    padding: 2.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .step-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .step-number {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-color);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 auto 1.5rem;
+  }
+
+  .step-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .step-text {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* CTA Section */
+  .cta-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #2980b9 100%);
+    color: var(--white);
+    padding: 4rem 2rem;
+    border-radius: 16px;
+    text-align: center;
+    margin: 4rem 0;
+  }
+
+  .cta-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto 2.5rem;
+    opacity: 0.95;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-button-primary,
+  .cta-button-secondary {
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .cta-button-primary {
+    background: var(--white);
+    color: var(--primary-color);
+  }
+
+  .cta-button-primary:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .cta-button-secondary {
+    background: transparent;
+    color: var(--white);
+    border: 2px solid var(--white);
+  }
+
+  .cta-button-secondary:hover {
+    background: var(--white);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .about-title {
+      font-size: 1.75rem;
+    }
+
+    .about-intro {
+      font-size: 1rem;
+      padding: 0 1rem;
+    }
+
+    .section-heading {
+      font-size: 1.5rem;
+    }
+
+    .features-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .steps-container {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .cta-section {
+      padding: 3rem 1.5rem;
+    }
+
+    .cta-title {
+      font-size: 1.75rem;
+    }
+
+    .cta-text {
+      font-size: 1rem;
+    }
+
+    .cta-buttons {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .cta-button-primary,
+    .cta-button-secondary {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+
+

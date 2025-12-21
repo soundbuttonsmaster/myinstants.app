@@ -285,7 +285,7 @@ function slugify(text: string): string {
   const categoriesMenu = document.getElementById('categoriesMenu');
   
   if (categoriesDropdown && categoriesMenu) {
-    let dropdownTimeout: number | null = null;
+    let dropdownTimeout = null;
     
     const updateDropdownPosition = () => {
       if (categoriesMenu.style.display === 'block' || categoriesMenu.style.display === '') {
@@ -309,7 +309,7 @@ function slugify(text: string): string {
       dropdownTimeout = window.setTimeout(() => {
         categoriesDropdown.classList.remove('active');
         categoriesMenu.style.display = 'none';
-      }, 200);
+      }, 150);
     };
     
     categoriesDropdown.addEventListener('mouseenter', showDropdown);
@@ -318,19 +318,39 @@ function slugify(text: string): string {
     categoriesMenu.addEventListener('mouseenter', showDropdown);
     categoriesMenu.addEventListener('mouseleave', hideDropdown);
 
-    // Also handle click for better mobile/tablet support
+    // Handle click - don't prevent default, allow links to work
     categoriesDropdown.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const isActive = categoriesDropdown.classList.contains('active');
-      if (isActive) {
+      // Only toggle if clicking the button itself, not a link inside
+      if (e.target === categoriesDropdown || categoriesDropdown.contains(e.target as Node)) {
+        const isLink = (e.target as HTMLElement).closest('a');
+        if (!isLink) {
+          e.stopPropagation();
+          const isActive = categoriesDropdown.classList.contains('active');
+          if (isActive) {
+            categoriesDropdown.classList.remove('active');
+            categoriesMenu.style.display = 'none';
+          } else {
+            categoriesDropdown.classList.add('active');
+            categoriesMenu.style.display = 'block';
+            updateDropdownPosition();
+          }
+        }
+      }
+    });
+
+    // Allow category links to navigate immediately - don't block them
+    const categoryLinks = categoriesMenu.querySelectorAll('a.dropdown-item');
+    categoryLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        // Clear any pending hide timeout when clicking a link
+        if (dropdownTimeout) {
+          clearTimeout(dropdownTimeout);
+          dropdownTimeout = null;
+        }
+        // Allow navigation to proceed immediately
         categoriesDropdown.classList.remove('active');
         categoriesMenu.style.display = 'none';
-      } else {
-        categoriesDropdown.classList.add('active');
-        categoriesMenu.style.display = 'block';
-        updateDropdownPosition();
-      }
+      });
     });
 
     // Update position on scroll and resize
@@ -340,11 +360,11 @@ function slugify(text: string): string {
     // Update submenu positions
     const updateSubmenuPositions = () => {
       document.querySelectorAll('.dropdown-item-wrapper').forEach((wrapper) => {
-        const submenu = wrapper.querySelector('.dropdown-submenu') as HTMLElement;
+        const submenu = wrapper.querySelector('.dropdown-submenu');
         if (submenu && wrapper.matches(':hover')) {
           const wrapperRect = wrapper.getBoundingClientRect();
-          submenu.style.top = `${wrapperRect.top + window.scrollY}px`;
-          submenu.style.left = `${wrapperRect.right + window.scrollX + 8}px`;
+          (submenu as HTMLElement).style.top = `${wrapperRect.top + window.scrollY}px`;
+          (submenu as HTMLElement).style.left = `${wrapperRect.right + window.scrollX + 8}px`;
         }
       });
     };
@@ -354,6 +374,10 @@ function slugify(text: string): string {
     document.addEventListener('click', (e) => {
       const target = e.target as Node;
       if (!categoriesDropdown.contains(target) && !categoriesMenu.contains(target)) {
+        if (dropdownTimeout) {
+          clearTimeout(dropdownTimeout);
+          dropdownTimeout = null;
+        }
         categoriesDropdown.classList.remove('active');
         categoriesMenu.style.display = 'none';
       }
