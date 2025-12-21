@@ -1081,3 +1081,62 @@ body {
   }
 }
 
+/* Sound Detail Page - Hide title and icons, make button 3x larger */
+.sound-button-center .instant .instant-link.link-secondary {
+  display: none !important;
+}
+
+.sound-button-center .instant .result-page-instant-sharebox {
+  display: none !important;
+}
+
+.sound-button-center .instant {
+  width: 330px !important;
+}
+
+.sound-button-center .instant .sprite-wrapper {
+  width: 330px !important;
+  height: 330px !important;
+}
+
+.sound-button-center .instant .button-ring {
+  width: 330px !important;
+  height: 330px !important;
+  background-size: 660px 330px !important;
+}
+
+.sound-button-center .instant .sprite-wrapper.pressed .button-ring {
+  background-position: -330px 0 !important;
+}
+
+.sound-button-center .instant .inner-btn {
+  width: 279px !important;
+  height: 279px !important;
+}
+
+@media (max-width: 768px) {
+  .sound-button-center .instant {
+    width: 225px !important;
+  }
+
+  .sound-button-center .instant .sprite-wrapper {
+    width: 225px !important;
+    height: 225px !important;
+  }
+
+  .sound-button-center .instant .button-ring {
+    width: 225px !important;
+    height: 225px !important;
+    background-size: 450px 225px !important;
+  }
+
+  .sound-button-center .instant .sprite-wrapper.pressed .button-ring {
+    background-position: -225px 0 !important;
+  }
+
+  .sound-button-center .instant .inner-btn {
+    width: 192px !important;
+    height: 192px !important;
+  }
+}
+

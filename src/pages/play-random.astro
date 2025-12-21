@@ -264,18 +264,41 @@ const ogImage = 'https://myinstants.app/images/og-image.jpg';
   }
 
   /* Make the sound button bigger on random page */
-  .random-sound-wrapper .instant {
-    transform: scale(2);
+  /* Hide icons on play-random page but keep title visible */
+  .random-sound-wrapper :global(.result-page-instant-sharebox) {
+    display: none !important;
   }
 
-  .random-sound-wrapper .instant .sprite-wrapper {
-    width: 200px !important;
-    height: 200px !important;
+  /* Style the title link to be larger and more prominent */
+  .random-sound-wrapper :global(.instant-link.link-secondary) {
+    font-size: 1.4rem !important;
+    margin-top: 1.5rem !important;
+    display: block !important;
   }
 
-  .random-sound-wrapper .instant .instant-link {
-    font-size: 1.4rem;
-    margin-top: 2rem;
+  /* Make sound button 3x larger on play-random page */
+  .random-sound-wrapper :global(.instant) {
+    width: 330px !important;
+  }
+
+  .random-sound-wrapper :global(.sprite-wrapper) {
+    width: 330px !important;
+    height: 330px !important;
+  }
+
+  .random-sound-wrapper :global(.button-ring) {
+    width: 330px !important;
+    height: 330px !important;
+    background-size: 660px 330px !important;
+  }
+
+  .random-sound-wrapper :global(.sprite-wrapper.pressed .button-ring) {
+    background-position: -330px 0 !important;
+  }
+
+  .random-sound-wrapper :global(.inner-btn) {
+    width: 279px !important;
+    height: 279px !important;
   }
 
   .random-button-container {
@@ -346,13 +369,29 @@ const ogImage = 'https://myinstants.app/images/og-image.jpg';
       font-size: 1rem;
     }
 
-    .random-sound-wrapper .instant {
-      transform: scale(1.5);
+    /* Make sound button 3x larger on mobile play-random page (75px * 3 = 225px) */
+    .random-sound-wrapper :global(.instant) {
+      width: 225px !important;
     }
 
-    .random-sound-wrapper .instant .sprite-wrapper {
-      width: 150px !important;
-      height: 150px !important;
+    .random-sound-wrapper :global(.sprite-wrapper) {
+      width: 225px !important;
+      height: 225px !important;
+    }
+
+    .random-sound-wrapper :global(.button-ring) {
+      width: 225px !important;
+      height: 225px !important;
+      background-size: 450px 225px !important;
+    }
+
+    .random-sound-wrapper :global(.sprite-wrapper.pressed .button-ring) {
+      background-position: -225px 0 !important;
+    }
+
+    .random-sound-wrapper :global(.inner-btn) {
+      width: 192px !important;
+      height: 192px !important;
     }
 
     .random-button {

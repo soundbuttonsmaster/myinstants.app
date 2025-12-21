@@ -470,6 +470,40 @@ const ogImage = 'https://myinstants.app/images/og-image.jpg';
     margin: 1rem 0;
   }
 
+  /* Hide title and icons on detail page - use :global to target child component */
+  .sound-button-center :global(.instant-link.link-secondary) {
+    display: none !important;
+  }
+
+  .sound-button-center :global(.result-page-instant-sharebox) {
+    display: none !important;
+  }
+
+  /* Make sound button 3x larger on detail page */
+  .sound-button-center :global(.instant) {
+    width: 330px !important;
+  }
+
+  .sound-button-center :global(.sprite-wrapper) {
+    width: 330px !important;
+    height: 330px !important;
+  }
+
+  .sound-button-center :global(.button-ring) {
+    width: 330px !important;
+    height: 330px !important;
+    background-size: 660px 330px !important;
+  }
+
+  .sound-button-center :global(.sprite-wrapper.pressed .button-ring) {
+    background-position: -330px 0 !important;
+  }
+
+  .sound-button-center :global(.inner-btn) {
+    width: 279px !important;
+    height: 279px !important;
+  }
+
   .sound-identifier {
     font-size: 1.1rem;
     color: var(--text-primary);
@@ -568,6 +602,31 @@ const ogImage = 'https://myinstants.app/images/og-image.jpg';
   @media (max-width: 768px) {
     .sound-detail-title {
       font-size: 1.75rem;
+    }
+
+    /* Make sound button 3x larger on mobile detail page too (75px * 3 = 225px) */
+    .sound-button-center :global(.instant) {
+      width: 225px !important;
+    }
+
+    .sound-button-center :global(.sprite-wrapper) {
+      width: 225px !important;
+      height: 225px !important;
+    }
+
+    .sound-button-center :global(.button-ring) {
+      width: 225px !important;
+      height: 225px !important;
+      background-size: 450px 225px !important;
+    }
+
+    .sound-button-center :global(.sprite-wrapper.pressed .button-ring) {
+      background-position: -225px 0 !important;
+    }
+
+    .sound-button-center :global(.inner-btn) {
+      width: 192px !important;
+      height: 192px !important;
     }
 
     .action-buttons-simple {
