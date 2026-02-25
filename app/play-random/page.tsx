@@ -4,13 +4,6 @@ import Footer from "@/components/layout/footer"
 import PlayRandomClient from "@/components/play-random/play-random-client"
 import { apiClient } from "@/lib/api/client"
 import type { Sound } from "@/lib/types/sound"
-
-import type { Metadata } from "next"
-import Header from "@/components/layout/header"
-import Footer from "@/components/layout/footer"
-import PlayRandomClient from "@/components/play-random/play-random-client"
-import { apiClient } from "@/lib/api/client"
-import type { Sound } from "@/lib/types/sound"
 import { SITE } from "@/lib/constants/site"
 
 export const metadata: Metadata = {
