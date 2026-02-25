@@ -2,16 +2,17 @@ import { Metadata } from "next"
 import Link from "next/link"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
+import { SITE } from "@/lib/constants/site"
 
 export const metadata: Metadata = {
-  title: "About Us - MemeSoundboard.Org",
-  description: "Learn about MemeSoundboard.org - the free platform for playing and sharing meme sounds, sound effects, and audio clips.",
+  title: `About Us - ${SITE.domain}`,
+  description: `Learn about ${SITE.domain} - the free platform for playing and sharing sound buttons, meme soundboard, and sound effects.`,
   robots: { index: true, follow: true },
-  alternates: { canonical: "https://memesoundboard.org/about" },
+  alternates: { canonical: `${SITE.baseUrl}/about` },
   openGraph: {
-    title: "About Us - MemeSoundboard.Org",
-    url: "https://memesoundboard.org/about",
-    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+    title: `About Us - ${SITE.domain}`,
+    url: `${SITE.baseUrl}/about`,
+    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: { card: "summary_large_image", images: ["/og.jpeg"] },
 }
@@ -26,9 +27,9 @@ export default function AboutPage() {
           
           <div className="space-y-6 text-gray-700 dark:text-gray-300">
             <section>
-              <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Welcome to MemeSoundboard.org</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Welcome to {SITE.domain}</h2>
               <p>
-                MemeSoundboard.org is a free, user-friendly platform dedicated to providing access to thousands of meme sounds, 
+                {SITE.domain} is a free, user-friendly platform dedicated to providing access to thousands of sound buttons, 
                 sound effects, and audio clips. Our mission is to make it easy for everyone to discover, play, and share their 
                 favorite sounds without any registration or payment required.
               </p>
@@ -52,7 +53,7 @@ export default function AboutPage() {
               <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Our Mission</h2>
               <p>
                 We believe that sound effects and meme sounds should be accessible to everyone. Whether you're a content creator, 
-                streamer, gamer, or just someone who loves memes, MemeSoundboard.org provides a seamless experience to find and 
+                streamer, gamer, or just someone who loves memes, {SITE.domain} provides a seamless experience to find and 
                 use the sounds you need.
               </p>
             </section>
@@ -85,15 +86,15 @@ export default function AboutPage() {
                 Have questions, suggestions, or feedback? We'd love to hear from you! Reach out to us at:
               </p>
               <p className="mt-2">
-                <strong>Email:</strong> <a href="mailto:play@memesoundboard.org" className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200">play@memesoundboard.org</a>
+                <strong>Email:</strong> <a href={`mailto:${SITE.email}`} className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200">{SITE.email}</a>
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Thank You</h2>
               <p>
-                Thank you for using MemeSoundboard.org! We're constantly working to improve the platform and add new features. 
-                Your support and feedback help us make MemeSoundboard.org the best soundboard platform on the web.
+                Thank you for using {SITE.domain}! We're constantly working to improve the platform and add new features.
+                Your support and feedback help us make {SITE.domain} the best soundboard platform on the web.
               </p>
             </section>
           </div>

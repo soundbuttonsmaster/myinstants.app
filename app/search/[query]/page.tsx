@@ -7,6 +7,7 @@ import SoundGrid from "@/components/sound/sound-grid"
 import SearchLoadMore from "@/components/search/search-load-more"
 import { apiClient } from "@/lib/api/client"
 import type { Sound } from "@/lib/types/sound"
+import { SITE } from "@/lib/constants/site"
 
 export const revalidate = 60
 
@@ -50,9 +51,10 @@ export async function generateMetadata({ params }: SearchQueryPageProps): Promis
   }
 
   const queryTitle = toTitleCase(searchQuery)
-  const title = `${queryTitle} Soundboard - Instant Sound Buttons | MemeSoundboard.Org`
-  const description = `Play & download ${totalItems > 0 ? totalItems + ' ' : ''}${searchQuery} sound buttons free! High-quality MP3 downloads perfect for memes, TikTok, Discord and content creation. No registration required!`
-  const canonicalUrl = `https://memesoundboard.org/search/${slug}`
+  const countStr = totalItems > 0 ? `${totalItems} ` : ""
+  const title = `${queryTitle} Soundboard: Play Instant Sound Buttons`
+  const description = `Play and download ${countStr}${searchQuery} sound effect for free! Instant play, high-quality MP3 downloads. Perfect for memes, TikTok, Discord, and content creation.`
+  const canonicalUrl = `${SITE.baseUrl}/search/${slug}`
 
   return {
     title,
@@ -68,8 +70,8 @@ export async function generateMetadata({ params }: SearchQueryPageProps): Promis
       title,
       description,
       url: canonicalUrl,
-      siteName: "MemeSoundboard.Org",
-      images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+      siteName: SITE.name,
+      images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.domain }],
     },
     twitter: {
       card: "summary_large_image",
@@ -83,6 +85,13 @@ export async function generateMetadata({ params }: SearchQueryPageProps): Promis
     },
     alternates: {
       canonical: canonicalUrl,
+      languages: {
+        en: canonicalUrl,
+        es: `${SITE.baseUrl}/es/search/${slug}`,
+        fr: `${SITE.baseUrl}/fr/search/${slug}`,
+        pt: `${SITE.baseUrl}/pt/search/${slug}`,
+        ru: `${SITE.baseUrl}/ru/search/${slug}`,
+      },
     },
   }
 }
@@ -122,9 +131,9 @@ export default async function SearchQueryPage({ params }: SearchQueryPageProps) 
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "MemeSoundboard", "item": "https://memesoundboard.org" },
-      { "@type": "ListItem", "position": 2, "name": "Sounds", "item": "https://memesoundboard.org/search" },
-      { "@type": "ListItem", "position": 3, "name": `${searchQuery} Soundboard`, "item": `https://memesoundboard.org/search/${slug}` }
+      { "@type": "ListItem", "position": 1, "name": SITE.name, "item": SITE.baseUrl },
+      { "@type": "ListItem", "position": 2, "name": "Sounds", "item": `${SITE.baseUrl}/search` },
+      { "@type": "ListItem", "position": 3, "name": `${searchQuery} Soundboard`, "item": `${SITE.baseUrl}/search/${slug}` }
     ]
   }
 
@@ -166,7 +175,7 @@ export default async function SearchQueryPage({ params }: SearchQueryPageProps) 
             {/* Search Results Header */}
             <div className="mb-6">
               <h1 className="text-3xl md:text-4xl font-bold mb-2 text-gray-800 dark:text-white">
-                {toTitleCase(searchQuery)} Soundboard: Unblocked Sound Button Effects
+                {queryTitle} Sound Buttons
               </h1>
               {sounds.length > 0 && (
                 <p className="text-lg text-gray-600 dark:text-gray-300">
@@ -200,7 +209,7 @@ export default async function SearchQueryPage({ params }: SearchQueryPageProps) 
                       About {searchQuery} Sound Buttons
                     </h2>
                     <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
-                      Find the best <strong>{searchQuery} sound buttons</strong> and sounds on MemeSoundboard.org. Our sound button collection is full of free, high-quality audio clips for your memes, content creations, gaming, and anything you might want to entertain yourself with. All sound buttons are free to download and listen to.
+                      Find the best <strong>{searchQuery} sound buttons</strong> and sounds on {SITE.domain}. Our sound button collection is full of free, high-quality audio clips for your memes, content creations, gaming, and anything you might want to entertain yourself with. All sound buttons are free to download and listen to.
                     </p>
                     <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
                       Whether you're creating meme content, gaming videos, or need sound effects for your projects, our {searchQuery} sound buttons work instantly on all devices - no downloads required to play.

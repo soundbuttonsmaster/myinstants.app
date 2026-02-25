@@ -8,6 +8,7 @@ import SoundGrid from "@/components/sound/sound-grid"
 import { apiClient } from "@/lib/api/client"
 import type { Sound } from "@/lib/types/sound"
 import { getCategoryById } from "@/lib/constants/categories"
+import { SITE } from "@/lib/constants/site"
 
 function toTitleCase(str: string): string {
   if (!str) return ""
@@ -32,19 +33,18 @@ export async function generateMetadata({ params }: SoundDetailPageProps): Promis
     const response = await apiClient.getSoundById(soundId)
     if (response?.data) {
       const sound = response.data as Sound
-      const name = toTitleCase(sound.name || "")
-      const title = `${name} - Instant Sound Effect Button | MemeSoundboard.Org`
-      const description = `Play and download the ${sound.name} sound effect buttons instantly. Browse thousands of meme sounds and sound buttons on MemeSoundboard.org!`
+      const title = `${sound.name} Sound Effect Download: Instant Play Sound Buttons`
+      const description = `Download and play the ${sound.name} sound button for your soundboard. This trending sound effect is perfect for meme creation, gaming, streaming, and sharing viral content across platforms!`
       const canonicalSlug = `${sound.name?.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '') || 'sound'}-${sound.id}`
       return {
         title,
         description,
-        alternates: { canonical: `https://memesoundboard.org/${canonicalSlug}` },
+        alternates: { canonical: `${SITE.baseUrl}/${canonicalSlug}` },
         openGraph: {
           title,
           description,
-          url: `https://memesoundboard.org/${canonicalSlug}`,
-          images: [{ url: "/sound.jpg", width: 1200, height: 630, alt: "MemeSoundboard.org - Sound Button" }],
+          url: `${SITE.baseUrl}/${canonicalSlug}`,
+          images: [{ url: "/sound.jpg", width: 1200, height: 630, alt: `${SITE.name} - Sound Button` }],
         },
         twitter: { card: "summary_large_image", images: ["/sound.jpg"] },
       }
@@ -103,14 +103,14 @@ export default async function SoundDetailPage({ params }: SoundDetailPageProps) 
 
   const slugBase = sound.name?.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '') || 'sound'
   const soundSlug = `${slugBase}-${sound.id}`
-  const canonicalUrl = `https://memesoundboard.org/${soundSlug}`
+  const canonicalUrl = `${SITE.baseUrl}/${soundSlug}`
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "MemeSoundboard", "item": "https://memesoundboard.org" },
-      { "@type": "ListItem", "position": 2, "name": "Sounds", "item": "https://memesoundboard.org/search" },
+      { "@type": "ListItem", "position": 1, "name": SITE.name, "item": SITE.baseUrl },
+      { "@type": "ListItem", "position": 2, "name": "Sounds", "item": `${SITE.baseUrl}/search` },
       { "@type": "ListItem", "position": 3, "name": sound.name, "item": canonicalUrl }
     ]
   };

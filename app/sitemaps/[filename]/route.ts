@@ -13,7 +13,7 @@ export async function GET(_request: Request, { params }: Params) {
   if (
     !filename ||
     filename.includes("..") ||
-    !/^sitemap_memesoundboard\.org_[a-z0-9_.-]+\.xml$/.test(filename)
+    !/^sitemap_myinstants\.app_[a-z0-9_.-]+\.xml$/.test(filename)
   ) {
     return new NextResponse("Not Found", { status: 404 })
   }

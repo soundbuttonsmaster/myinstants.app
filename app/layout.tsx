@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import { AuthProvider } from "@/lib/auth/auth-context"
+import { SITE } from "@/lib/constants/site"
 import "./globals.css"
 
 export const viewport: Viewport = {
@@ -11,33 +12,33 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: "Meme Soundboard - Free Meme Sounds & Sound Effects",
-  description: "Play thousands of free meme sounds, sound effects, and audio clips. The best meme soundboard on the web. Free, fast, and fun!",
-  keywords: ["meme soundboard", "meme sounds", "sound effects", "audio clips", "free sounds", "meme audio", "soundboard"],
-  authors: [{ name: "memesoundboard.org" }],
-  creator: "memesoundboard.org",
-  publisher: "memesoundboard.org",
-  metadataBase: new URL("https://memesoundboard.org"),
+  title: "MyInstants | Play Instant Sound Buttons & Meme Soundboard",
+  description: "Myinstants is the ultimate collection of sound buttons, unblocked meme soundboard, prank sounds, with thousands of sound effects and meme buttons.",
+  keywords: ["sound buttons", "meme soundboard", "sound effects", "prank sounds", "unblocked soundboard", "instant play", "Myinstants"],
+  authors: [{ name: SITE.domain }],
+  creator: SITE.domain,
+  publisher: SITE.domain,
+  metadataBase: new URL(SITE.baseUrl),
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://memesoundboard.org",
-    siteName: "Meme Soundboard",
-    title: "Meme Soundboard - Free Meme Sounds & Sound Effects",
-    description: "Play thousands of free meme sounds, sound effects, and audio clips. The best meme soundboard on the web.",
+    url: SITE.baseUrl,
+    siteName: SITE.name,
+    title: "MyInstants | Play Instant Sound Buttons & Meme Soundboard",
+    description: "Myinstants is the ultimate collection of sound buttons, unblocked meme soundboard, prank sounds, with thousands of sound effects and meme buttons.",
     images: [
       {
         url: "/og.jpeg",
         width: 1200,
         height: 630,
-        alt: "Meme Soundboard",
+        alt: SITE.name,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Meme Soundboard - Free Meme Sounds & Sound Effects",
-    description: "Play thousands of free meme sounds, sound effects, and audio clips.",
+    title: "MyInstants | Play Instant Sound Buttons & Meme Soundboard",
+    description: "Myinstants is the ultimate collection of sound buttons, unblocked meme soundboard, prank sounds, with thousands of sound effects and meme buttons.",
     images: ["/og.jpeg"],
   },
   robots: {
@@ -70,7 +71,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "MemeSoundboard",
+    title: SITE.name,
   },
 }
 
@@ -83,13 +84,13 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <link rel="alternate" type="application/rss+xml" title="Meme Soundboard - Latest Sounds" href="https://memesoundboard.org/feed/sounds" />
-        <link rel="alternate" type="application/rss+xml" title="Meme Soundboard - Categories" href="https://memesoundboard.org/feed/categories" />
-        <link rel="alternate" type="application/rss+xml" title="Meme Soundboard - Static Pages" href="https://memesoundboard.org/feed/static" />
+        <link rel="alternate" type="application/rss+xml" title={`${SITE.name} - Latest Sounds`} href={`${SITE.baseUrl}/feed/sounds`} />
+        <link rel="alternate" type="application/rss+xml" title={`${SITE.name} - Categories`} href={`${SITE.baseUrl}/feed/categories`} />
+        <link rel="alternate" type="application/rss+xml" title={`${SITE.name} - Static Pages`} href={`${SITE.baseUrl}/feed/static`} />
         <meta name="theme-color" content="#000000" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="MemeSoundboard" />
+        <meta name="apple-mobile-web-app-title" content={SITE.name} />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="msapplication-TileColor" content="#000000" />
         <meta name="msapplication-TileImage" content="/mstile-150x150.png" />

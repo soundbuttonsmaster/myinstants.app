@@ -3,16 +3,17 @@ import Link from "next/link"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import { Mail, MessageSquare, HelpCircle } from "lucide-react"
+import { SITE } from "@/lib/constants/site"
 
 export const metadata: Metadata = {
-  title: "Contact Us - MemeSoundboard.Org",
-  description: "Get in touch with MemeSoundboard.org. We're here to help with questions, feedback, or support requests.",
+  title: `Contact Us - ${SITE.domain}`,
+  description: `Get in touch with ${SITE.domain}. We're here to help with questions, feedback, or support requests.`,
   robots: { index: true, follow: true },
-  alternates: { canonical: "https://memesoundboard.org/contact" },
+  alternates: { canonical: `${SITE.baseUrl}/contact` },
   openGraph: {
-    title: "Contact Us - MemeSoundboard.Org",
-    url: "https://memesoundboard.org/contact",
-    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+    title: `Contact Us - ${SITE.domain}`,
+    url: `${SITE.baseUrl}/contact`,
+    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: { card: "summary_large_image", images: ["/og.jpeg"] },
 }
@@ -45,10 +46,10 @@ export default function ContactPage() {
                       Send us an email and we'll get back to you as soon as possible.
                     </p>
                     <a 
-                      href="mailto:play@memesoundboard.org" 
+                      href={`mailto:${SITE.email}`} 
                       className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200"
                     >
-                      play@memesoundboard.org
+                      {SITE.email}
                     </a>
                   </div>
                 </div>
@@ -65,10 +66,10 @@ export default function ContactPage() {
                       For general questions, feature requests, or feedback about the platform.
                     </p>
                     <a 
-                      href="mailto:play@memesoundboard.org?subject=General Inquiry" 
+                      href={`mailto:${SITE.email}?subject=General Inquiry`} 
                       className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200"
                     >
-                      play@memesoundboard.org
+                      {SITE.email}
                     </a>
                   </div>
                 </div>
@@ -85,10 +86,10 @@ export default function ContactPage() {
                       Experiencing technical difficulties? We're here to help resolve any issues.
                     </p>
                     <a 
-                      href="mailto:play@memesoundboard.org?subject=Technical Support" 
+                      href={`mailto:${SITE.email}?subject=Technical Support`} 
                       className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200"
                     >
-                      play@memesoundboard.org
+                      {SITE.email}
                     </a>
                   </div>
                 </div>
@@ -110,8 +111,8 @@ export default function ContactPage() {
                   <h3 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">How do I report a broken sound?</h3>
                   <p className="text-sm">
                     If you encounter a sound that doesn't play or is broken, please email us at{" "}
-                    <a href="mailto:play@memesoundboard.org" className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200">
-                      play@memesoundboard.org
+                    <a href={`mailto:${SITE.email}`} className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200">
+                      {SITE.email}
                     </a>{" "}
                     with the sound name and we'll fix it as soon as possible.
                   </p>
@@ -120,8 +121,8 @@ export default function ContactPage() {
                   <h3 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">Can I request a specific sound?</h3>
                   <p className="text-sm">
                     Yes! We're always looking to add new sounds. Send us your request at{" "}
-                    <a href="mailto:play@memesoundboard.org" className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200">
-                      play@memesoundboard.org
+                    <a href={`mailto:${SITE.email}`} className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200">
+                      {SITE.email}
                     </a>{" "}
                     and we'll consider adding it to our library.
                   </p>

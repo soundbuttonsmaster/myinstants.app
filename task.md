@@ -1,9 +1,46 @@
-# Task: Fix Homepage Responsiveness and Design
+Website name: Myinstants
 
-## Status
-- [x] Explore codebase to identify relevant HTML/CSS files <!-- id: 0 -->
-- [x] Analyze the current implementation of "Trending" and "New" sections <!-- id: 1 -->
-- [x] Fix responsive layout issues on mobile (overlapping, sizing) <!-- id: 2 -->
-- [x] Fix layout issues on desktop (spacing, alignment) <!-- id: 3 -->
-- [x] Improve general aesthetics (spacing, typography, visual hierarchy) <!-- id: 4 -->
-- [x] Verify changes <!-- id: 5 -->
+================================================================================
+English 
+================================================================================
+
+Home Page Content
+
+Meta Title: MyInstants | Play Instant Sound Buttons & Meme Soundboard  
+Meta Description: Myinstants is the ultimate collection of sound buttons, unblocked meme soundboard, prank sounds, with thousands of sound effects and meme buttons.
+H1:  Myinstants: 100K+ Sound Buttons and Meme Soundboard Unblocked
+Short Description: Myinstants is your ultimate destination for unblocked meme soundboard, sound buttons, prank, sound effects, and thousands of viral sounds you can play, create and share instantly.
+
+Trending Page Content:
+
+Meta Title: Trending Sound Buttons: Most Popular Meme Soundboard
+Meta Description: Discover the most popular trending sound buttons, viral meme soundboard and sound effects on Myinstants! Play, download and share sound effects for memes, gaming, entertainment!
+H1: Trending Sound Buttons
+Short Description: Discover the most popular and trending sound buttons right now
+
+New Page Content:
+
+Meta Title: New Sound Buttons: Latest Meme Soundboard
+Meta Description: Discover the newest sound buttons on Myinstants! Fresh prank sounds, unblocked meme soundboard, and latest sound effects added daily. Play and share instantly!
+H1: New Sound Buttons
+Short Description: Find new sound buttons and prank sounds added daily to Myinstants soundboard collection!
+
+
+Category page content:
+
+Meta Title: {category name} Soundboard: Instant Sound Buttons | Myinstants.app
+Meta Description:  Explore our {category name} soundboard with trending sound buttons and meme soundboard. Download, play, and share {category name} sound effects for pranks, fun & entertainment!
+H1: {category name} Soundboard
+
+Sound Details Page Content:
+
+Meta Title: {sound name} Sound Effect Download: Instant Play Sound Buttons
+Meta Description: Download and play the {sound name} sound button for your soundboard. This trending sound effect is perfect for meme creation, gaming, streaming, and sharing viral content across platforms!
+H1: {sound name} Sound Buttons
+Description: Play the {sound name} sound effect right now! Download the high-quality sound effect to your device, share with friends, and enjoy unlimited playback!
+
+Search page Content: 
+
+Meta Title: {sound name} Soundboard: Play Instant Sound Buttons
+Meta Description: Play and download {sound count} {search name} sound effect for free! Instant play, high-quality MP3 downloads. Perfect for memes, TikTok, Discord, and content creation. 
+H1: {sound name} Sound Buttons 

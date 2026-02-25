@@ -2,16 +2,17 @@ import type { Metadata } from "next"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import UploadSoundForm from "@/components/upload/upload-sound-form"
+import { SITE } from "@/lib/constants/site"
 
 export const metadata: Metadata = {
-  title: "Upload Sound - MemeSoundboard.Org",
-  description: "Upload your own meme sound to MemeSoundboard.org. Safe and fun for everyone!",
+  title: `Upload Sound - ${SITE.domain}`,
+  description: `Upload your own sound to ${SITE.domain}. Safe and fun for everyone!`,
   robots: { index: false, follow: true },
-  alternates: { canonical: "https://memesoundboard.org/upload-sound" },
+  alternates: { canonical: `${SITE.baseUrl}/upload-sound` },
   openGraph: {
-    title: "Upload Sound - MemeSoundboard.Org",
-    url: "https://memesoundboard.org/upload-sound",
-    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+    title: `Upload Sound - ${SITE.domain}`,
+    url: `${SITE.baseUrl}/upload-sound`,
+    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: { card: "summary_large_image", images: ["/og.jpeg"] },
 }

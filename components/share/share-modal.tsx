@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { createPortal } from "react-dom"
 import { X, Copy, Share2, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { SITE } from "@/lib/constants/site"
 
 function generateSlug(name: string): string {
   if (!name) return ""
@@ -30,7 +31,7 @@ const ShareModal = ({ soundName, soundId, isOpen, onClose }: ShareModalProps) =>
   const soundUrl =
     typeof window !== "undefined"
       ? `${window.location.origin}/${fullSlug}`
-      : `https://memesoundboard.org/${fullSlug}`
+      : `${SITE.baseUrl}/${fullSlug}`
   const encodedUrl = encodeURIComponent(soundUrl)
   const encodedText = encodeURIComponent(`Check out this sound: ${soundName}`)
 

@@ -2,28 +2,29 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
+import { SITE } from "@/lib/constants/site"
 
 export const metadata: Metadata = {
-  title: "404 - Page Not Found | MemeSoundboard.org",
-  description: "The page you're looking for doesn't exist. Browse our collection of meme sounds, sound effects, and trending audio clips.",
+  title: `404 - Page Not Found | ${SITE.domain}`,
+  description: "The page you're looking for doesn't exist. Browse our collection of sound buttons, meme soundboard, and trending audio clips.",
   robots: {
     index: false,
     follow: true,
   },
-  alternates: { canonical: "https://memesoundboard.org/404" },
+  alternates: { canonical: `${SITE.baseUrl}/404` },
   openGraph: {
-    title: "404 - Page Not Found | MemeSoundboard.org",
-    description: "The page you're looking for doesn't exist. Browse our collection of meme sounds and sound effects.",
-    url: "https://memesoundboard.org/404",
-    siteName: "MemeSoundboard.org",
+    title: `404 - Page Not Found | ${SITE.domain}`,
+    description: "The page you're looking for doesn't exist. Browse our collection of sound buttons and meme soundboard.",
+    url: `${SITE.baseUrl}/404`,
+    siteName: SITE.name,
     type: "website",
-    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: {
     card: "summary_large_image",
     images: ["/og.jpeg"],
-    title: "404 - Page Not Found | MemeSoundboard.org",
-    description: "The page you're looking for doesn't exist. Browse our collection of meme sounds and sound effects.",
+    title: `404 - Page Not Found | ${SITE.domain}`,
+    description: "The page you're looking for doesn't exist. Browse our collection of sound buttons and meme soundboard.",
   },
 }
 

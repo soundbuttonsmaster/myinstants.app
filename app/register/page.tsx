@@ -3,29 +3,30 @@ import Link from "next/link"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import RegisterForm from "@/components/auth/register-form"
+import { SITE } from "@/lib/constants/site"
 
 export const metadata: Metadata = {
-  title: "Create Account - MemeSoundboard.Org",
-  description: "Create your free MemeSoundboard.org account to save favorite sounds and enjoy the best meme soundboard. Safe and fun for everyone!",
-  keywords: ["meme soundboard account", "sign up", "register", "free account", "meme sounds"],
+  title: `Create Account - ${SITE.domain}`,
+  description: `Create your free ${SITE.domain} account to save favorite sounds and enjoy the best meme soundboard. Safe and fun for everyone!`,
+  keywords: ["sound buttons account", "sign up", "register", "free account", "Myinstants"],
   openGraph: {
-    title: "Create Account - MemeSoundboard.Org",
-    description: "Create your free account and save your favorite meme sounds. Safe and fun!",
-    url: "https://memesoundboard.org/register",
-    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+    title: `Create Account - ${SITE.domain}`,
+    description: "Create your free account and save your favorite sound buttons. Safe and fun!",
+    url: `${SITE.baseUrl}/register`,
+    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: { card: "summary_large_image", images: ["/og.jpeg"] },
-  alternates: { canonical: "https://memesoundboard.org/register" },
+  alternates: { canonical: `${SITE.baseUrl}/register` },
   robots: { index: true, follow: true },
 }
 
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "Create Account - MemeSoundboard.Org",
-  description: "Create your free account to save favorite meme sounds and enjoy the soundboard.",
-  url: "https://memesoundboard.org/register",
-  publisher: { "@type": "Organization", name: "MemeSoundboard.org" },
+  name: `Create Account - ${SITE.domain}`,
+  description: "Create your free account to save favorite sound buttons and enjoy the soundboard.",
+  url: `${SITE.baseUrl}/register`,
+  publisher: { "@type": "Organization", name: SITE.domain },
 }
 
 export default function RegisterPage() {

@@ -5,20 +5,26 @@ import PlayRandomClient from "@/components/play-random/play-random-client"
 import { apiClient } from "@/lib/api/client"
 import type { Sound } from "@/lib/types/sound"
 
+import type { Metadata } from "next"
+import Header from "@/components/layout/header"
+import Footer from "@/components/layout/footer"
+import PlayRandomClient from "@/components/play-random/play-random-client"
+import { apiClient } from "@/lib/api/client"
+import type { Sound } from "@/lib/types/sound"
+import { SITE } from "@/lib/constants/site"
+
 export const metadata: Metadata = {
-  title: "Play Random Sound – Fun Meme Sound Button Generator",
-  description:
-    "Play random meme sounds with one click! Discover fun, trending, and new sound buttons. Try your luck and enjoy endless sound surprises on memesoundboard.org.",
+  title: "Play Random Sound – Fun Sound Button Generator",
+  description: `Play random sound buttons with one click! Discover fun, trending, and new sound buttons. Try your luck and enjoy endless sound surprises on ${SITE.domain}.`,
   openGraph: {
-    title: "Play Random Sound – Fun Meme Sound Button Generator",
-    description:
-      "Play random meme sounds with one click! Discover fun, trending, and new sound buttons. Try your luck and enjoy endless sound surprises.",
-    url: "https://memesoundboard.org/play-random",
-    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+    title: "Play Random Sound – Fun Sound Button Generator",
+    description: `Play random sound buttons with one click! Discover fun, trending, and new sound buttons. Try your luck and enjoy endless sound surprises on ${SITE.domain}.`,
+    url: `${SITE.baseUrl}/play-random`,
+    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: { card: "summary_large_image", images: ["/og.jpeg"] },
   alternates: {
-    canonical: "https://memesoundboard.org/play-random",
+    canonical: `${SITE.baseUrl}/play-random`,
   },
 }
 

@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next'
-
-const BASE = 'https://memesoundboard.org'
+import { SITE } from '@/lib/constants/site'
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -8,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: '*', allow: '/', disallow: ['/api/', '/admin/'] },
       { userAgent: 'Googlebot', allow: '/', disallow: ['/api/', '/admin/'] },
     ],
-    host: BASE,
-    sitemap: `${BASE}/sitemap.xml`,
+    host: SITE.baseUrl,
+    sitemap: `${SITE.baseUrl}/sitemap.xml`,
   }
 }

@@ -6,10 +6,11 @@ import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import SearchBar from "@/components/search-bar"
 import { getActiveCategories } from "@/lib/constants/categories"
+import { SITE } from "@/lib/constants/site"
 
 export const metadata: Metadata = {
-  title: "Search Sound Buttons - Find Sound Effects & Meme Soundboard | MemeSoundboard.Org",
-  description: "Search our vast collection of sound buttons, sound effects, meme sounds, and audio clips. Find the perfect sound for your videos, memes, streams, and more. Free to download and use.",
+  title: `Search Sound Buttons - Find Sound Effects & Meme Soundboard | ${SITE.domain}`,
+  description: "Search our vast collection of sound buttons, sound effects, meme sounds, and audio clips on Myinstants. Find the perfect sound for your videos, memes, streams, and more. Free to download and use.",
   keywords: [
     "search sound buttons",
     "search sound effects",
@@ -19,20 +20,24 @@ export const metadata: Metadata = {
     "sound effect search",
     "meme audio search",
     "free sound search",
-    "soundboard search"
+    "soundboard search",
+    "Myinstants"
   ],
-  alternates: { canonical: "https://memesoundboard.org/search" },
+  alternates: {
+    canonical: `${SITE.baseUrl}/search`,
+    languages: { en: `${SITE.baseUrl}/search`, es: `${SITE.baseUrl}/es/search`, fr: `${SITE.baseUrl}/fr/search`, pt: `${SITE.baseUrl}/pt/search`, ru: `${SITE.baseUrl}/ru/search` },
+  },
   openGraph: {
-    title: "Search Sound Buttons - Find Sound Effects & Meme Soundboard",
-    description: "Search our vast collection of sound buttons, sound effects, meme sounds, and audio clips.",
-    url: "https://memesoundboard.org/search",
-    siteName: "MemeSoundboard.Org",
-    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+    title: `Search Sound Buttons - Find Sound Effects & Meme Soundboard`,
+    description: "Search our vast collection of sound buttons, sound effects, meme sounds, and audio clips on Myinstants.",
+    url: `${SITE.baseUrl}/search`,
+    siteName: SITE.name,
+    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.domain }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Search Sound Buttons - Find Sound Effects & Meme Soundboard",
-    description: "Search our vast collection of sound buttons, sound effects, meme sounds, and audio clips.",
+    description: "Search our vast collection of sound buttons, sound effects, meme sounds, and audio clips on Myinstants.",
     images: ["/og.jpeg"],
   },
   robots: {
@@ -94,8 +99,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "MemeSoundboard", "item": "https://memesoundboard.org" },
-      { "@type": "ListItem", "position": 2, "name": "Sounds", "item": "https://memesoundboard.org/search" }
+      { "@type": "ListItem", "position": 1, "name": SITE.name, "item": SITE.baseUrl },
+      { "@type": "ListItem", "position": 2, "name": "Sounds", "item": `${SITE.baseUrl}/search` }
     ]
   }
 
@@ -245,7 +250,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                     Are the sound buttons free?
                   </h4>
                   <p className="text-gray-600 dark:text-gray-300">
-                    Yes! All sound buttons on MemeSoundboard.org are completely free to play, download, and use in your projects.
+                    Yes! All sound buttons on {SITE.domain} are completely free to play, download, and use in your projects.
                   </p>
                 </div>
                 <div>

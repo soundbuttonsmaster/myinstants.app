@@ -8,6 +8,7 @@ import Footer from "@/components/layout/footer"
 import { apiClient } from "@/lib/api/client"
 import type { Sound } from "@/lib/types/sound"
 import { getCategoryBySlug } from "@/lib/constants/categories"
+import { SITE } from "@/lib/constants/site"
 
 // Detect mobile device on server side
 function isMobileDevice(userAgent: string | null): boolean {
@@ -96,48 +97,42 @@ export async function generateMetadata({ params }: SlugPageProps): Promise<Metad
 
   if (resolved && 'category' in resolved) {
     const name = resolved.category.name
-    const description = `Explore the best ${name} soundboard buttons with instant sound effects, viral meme buttons and funny soundboards. Free to play and download!`
+    const title = `${name} Soundboard: Instant Sound Buttons | Myinstants.app`
+    const description = `Explore our ${name} soundboard with trending sound buttons and meme soundboard. Download, play, and share ${name} sound effects for pranks, fun & entertainment!`
     return {
-      title: `${name} Soundboard: Play Instant Sound Effect Buttons | Meme Soundboard`,
+      title,
       description,
-      alternates: { canonical: `https://memesoundboard.org/${slug}` },
+      alternates: { canonical: `${SITE.baseUrl}/${slug}` },
       openGraph: {
-        title: `${name} Soundboard: Play Instant Sound Effect Buttons`,
+        title,
         description,
-        url: `https://memesoundboard.org/${slug}`,
-        images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+        url: `${SITE.baseUrl}/${slug}`,
+        images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
       },
-      twitter: { card: "summary_large_image", images: ["/og.jpeg"], title: `${name} Soundboard | Meme Soundboard` },
+      twitter: { card: "summary_large_image", images: ["/og.jpeg"], title },
     }
   }
 
   if (resolved && 'sound' in resolved) {
     const sound = resolved.sound
-    const name = toTitleCase(sound.name || "")
-    const lower = name.toLowerCase()
-    const effectSuffix = lower.endsWith(" sound effect")
-      ? ""
-      : lower.endsWith(" sound")
-        ? " Effect"
-        : " Sound Effect"
-    const title = `${name}${effectSuffix} - Instant Play Button | MemeSoundboard.Org`
-    const description = `Play and download the ${sound.name} sound effect buttons instantly. Browse thousands of meme sounds and sound buttons on MemeSoundboard.org!`
+    const title = `${sound.name} Sound Effect Download: Instant Play Sound Buttons`
+    const description = `Download and play the ${sound.name} sound button for your soundboard. This trending sound effect is perfect for meme creation, gaming, streaming, and sharing viral content across platforms!`
     return {
       title,
       description,
-      alternates: { canonical: `https://memesoundboard.org/${slug}` },
+      alternates: { canonical: `${SITE.baseUrl}/${slug}` },
       openGraph: {
         title,
         description,
-        url: `https://memesoundboard.org/${slug}`,
-        images: [{ url: "/sound.jpg", width: 1200, height: 630, alt: "MemeSoundboard.org - Sound Button" }],
+        url: `${SITE.baseUrl}/${slug}`,
+        images: [{ url: "/sound.jpg", width: 1200, height: 630, alt: `${SITE.name} - Sound Button` }],
       },
       twitter: { card: "summary_large_image", images: ["/sound.jpg"], title },
     }
   }
 
   return {
-    title: "Page Not Found | Meme Soundboard",
+    title: `Page Not Found | ${SITE.name}`,
     description: "The page you're looking for doesn't exist.",
     robots: { index: false, follow: true },
   }
@@ -185,7 +180,7 @@ export default async function SlugPage({ params, searchParams }: SlugPageProps) 
       notFound()
     }
 
-    const BASE = "https://memesoundboard.org"
+    const BASE = SITE.baseUrl
     const categoryUrl = `${BASE}/${slug}`
 
     const breadcrumbSchema = {
@@ -224,7 +219,7 @@ export default async function SlugPage({ params, searchParams }: SlugPageProps) 
         <main className="mx-auto max-w-6xl px-4 py-8">
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
-              {category.name} Soundboard: Play Instant Sound Effect Buttons
+              {category.name} Soundboard
             </h1>
           </div>
 

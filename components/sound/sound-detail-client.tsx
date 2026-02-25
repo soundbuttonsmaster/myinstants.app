@@ -11,6 +11,7 @@ import SoundGrid from "@/components/sound/sound-grid"
 import { Button } from "@/components/ui/button"
 import type { Sound } from "@/lib/types/sound"
 import { getCategoryById } from "@/lib/constants/categories"
+import { SITE } from "@/lib/constants/site"
 import { useAuth } from "@/lib/auth/auth-context"
 import { apiClient } from "@/lib/api/client"
 
@@ -109,14 +110,14 @@ export default function SoundDetailClient({ sound, relatedSounds, isMobileDevice
 
   const soundSlug = `${generateSlug(sound.name)}-${sound.id}`
 
-  const canonicalUrl = `https://memesoundboard.org/${soundSlug}`
+  const canonicalUrl = `${SITE.baseUrl}/${soundSlug}`
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "MemeSoundboard", "item": "https://memesoundboard.org" },
-      { "@type": "ListItem", "position": 2, "name": "Sounds", "item": "https://memesoundboard.org/search" },
+      { "@type": "ListItem", "position": 1, "name": SITE.name, "item": SITE.baseUrl },
+      { "@type": "ListItem", "position": 2, "name": "Sounds", "item": `${SITE.baseUrl}/search` },
       { "@type": "ListItem", "position": 3, "name": sound.name, "item": canonicalUrl }
     ]
   };
@@ -148,7 +149,7 @@ export default function SoundDetailClient({ sound, relatedSounds, isMobileDevice
               {/* Top: title + meta row */}
               <div className="px-4 pt-4 pb-2 sm:px-5 sm:pt-5">
                 <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white text-center mb-2">
-                  {sound.name}: Instant Play Sound Effect Button
+                  {sound.name} Sound Buttons
                 </h1>
                 <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
                   <Link
@@ -266,7 +267,7 @@ export default function SoundDetailClient({ sound, relatedSounds, isMobileDevice
               <section className="bg-white dark:bg-slate-800/90 rounded-xl border border-slate-200 dark:border-slate-700 p-4 sm:p-5">
                 <h2 className="text-base font-semibold text-slate-900 dark:text-white mb-2">About This Sound</h2>
                 <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-2">
-                  The <strong className="text-slate-800 dark:text-slate-200">{sound.name}</strong> sound button is a popular audio clip perfect for your meme soundboard, content creation, and entertainment. This high-quality sound effect is part of MemeSoundboard.org's extensive collection of free, unblocked sound buttons that work on all devices - from smartphones to desktop computers.
+                  The <strong className="text-slate-800 dark:text-slate-200">{sound.name}</strong> sound button is a popular audio clip perfect for your meme soundboard, content creation, and entertainment. This high-quality sound effect is part of {SITE.domain}'s collection of free, unblocked sound buttons that work on all devices - from smartphones to desktop computers.
                 </p>
                 <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
                   Play and download the <strong className="text-slate-800 dark:text-slate-200">{sound.name}</strong> sound effect buttons instantly! Ideal for memes, pranks, gaming, editing, and sharing fun moments with everyone.
@@ -341,12 +342,12 @@ export default function SoundDetailClient({ sound, relatedSounds, isMobileDevice
                     className="w-full text-xs p-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 resize-none font-mono mb-3"
                     rows={3}
                     onFocus={(e) => e.currentTarget.select()}
-                    value={`<iframe src="https://memesoundboard.org/embed/${soundSlug}" width="300" height="90" style="max-width:100%;border:0;" loading="lazy"></iframe>`}
+                    value={`<iframe src="${SITE.baseUrl}/embed/${soundSlug}" width="300" height="90" style="max-width:100%;border:0;" loading="lazy"></iframe>`}
                     aria-label="Embed code for this sound"
                   />
                   <Button
                     onClick={() => {
-                      const code = `<iframe src="https://memesoundboard.org/embed/${soundSlug}" width="300" height="90" style="max-width:100%;border:0;" loading="lazy"></iframe>`;
+                      const code = `<iframe src="${SITE.baseUrl}/embed/${soundSlug}" width="300" height="90" style="max-width:100%;border:0;" loading="lazy"></iframe>`;
                       navigator.clipboard.writeText(code).then(() => {
                         setShowEmbedModal(false);
                       }).catch(() => {});

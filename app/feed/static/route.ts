@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-
-const BASE = 'https://memesoundboard.org'
+import { SITE } from '@/lib/constants/site'
 
 function escapeXml(s: string): string {
   return s
@@ -12,16 +11,16 @@ function escapeXml(s: string): string {
 }
 
 const staticEntries: { url: string; title: string; description: string }[] = [
-  { url: BASE, title: 'Meme Soundboard - Home', description: 'Play thousands of free meme sounds, sound effects, and audio clips. Unblocked instant play.' },
-  { url: `${BASE}/trending`, title: 'Trending Sounds', description: 'Most popular meme sounds and sound effects.' },
-  { url: `${BASE}/new`, title: 'New Sounds', description: 'Latest meme sounds and sound effects added.' },
-  { url: `${BASE}/search`, title: 'Search Sounds', description: 'Search meme soundboard - find sound effects and audio clips.' },
-  { url: `${BASE}/blog`, title: 'Blog', description: 'Meme soundboard blog and updates.' },
-  { url: `${BASE}/about`, title: 'About Us', description: 'About MemeSoundboard.org - free meme sounds and sound effects.' },
-  { url: `${BASE}/contact`, title: 'Contact', description: 'Contact MemeSoundboard.org.' },
-  { url: `${BASE}/terms`, title: 'Terms & Conditions', description: 'Terms of use for MemeSoundboard.org.' },
-  { url: `${BASE}/privacy`, title: 'Privacy Policy', description: 'Privacy policy for MemeSoundboard.org.' },
-  { url: `${BASE}/upload-sound`, title: 'Upload Sound', description: 'Upload your own meme sound to the soundboard.' },
+  { url: SITE.baseUrl, title: `${SITE.name} - Home`, description: "Myinstants is your ultimate destination for unblocked meme soundboard, sound buttons, prank, sound effects, and thousands of viral sounds you can play, create and share instantly." },
+  { url: `${SITE.baseUrl}/trending`, title: "Trending Sound Buttons: Most Popular Meme Soundboard", description: "Discover the most popular and trending sound buttons right now" },
+  { url: `${SITE.baseUrl}/new`, title: "New Sound Buttons: Latest Meme Soundboard", description: "Find new sound buttons and prank sounds added daily to Myinstants soundboard collection!" },
+  { url: `${SITE.baseUrl}/search`, title: 'Search Sound Buttons', description: 'Search sound buttons, sound effects, meme soundboard.' },
+  { url: `${SITE.baseUrl}/blog`, title: 'Blog', description: `${SITE.name} blog and updates.` },
+  { url: `${SITE.baseUrl}/about`, title: 'About Us', description: `About ${SITE.domain} - sound buttons and meme soundboard.` },
+  { url: `${SITE.baseUrl}/contact`, title: 'Contact', description: `Contact ${SITE.domain}.` },
+  { url: `${SITE.baseUrl}/terms`, title: 'Terms & Conditions', description: `Terms of use for ${SITE.domain}.` },
+  { url: `${SITE.baseUrl}/privacy`, title: 'Privacy Policy', description: `Privacy policy for ${SITE.domain}.` },
+  { url: `${SITE.baseUrl}/upload-sound`, title: 'Upload Sound', description: 'Upload your own sound to the soundboard.' },
 ]
 
 function buildRss(): string {
@@ -42,12 +41,12 @@ function buildRss(): string {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Meme Soundboard - Static Pages</title>
-    <link>${BASE}</link>
-    <description>Meme Soundboard - static pages: home, trending, new, search, blog, about, contact, terms, privacy.</description>
+    <title>${SITE.name} - Static Pages</title>
+    <link>${SITE.baseUrl}</link>
+    <description>${SITE.name} - static pages: home, trending, new, search, blog, about, contact, terms, privacy.</description>
     <language>en-us</language>
     <lastBuildDate>${lastBuild}</lastBuildDate>
-    <atom:link href="${BASE}/feed/static" rel="self" type="application/rss+xml"/>
+    <atom:link href="${SITE.baseUrl}/feed/static" rel="self" type="application/rss+xml"/>
 ${items}
   </channel>
 </rss>`

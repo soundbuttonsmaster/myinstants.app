@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import { apiClient } from "@/lib/api/client"
+import { SITE } from "@/lib/constants/site"
 
 type Props = { params: Promise<{ id: string }> }
 
@@ -21,24 +22,24 @@ interface BlogPost {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
   const numId = Number(id)
-  if (!Number.isInteger(numId) || numId < 1) return { title: "Blog - MemeSoundboard.Org" }
+  if (!Number.isInteger(numId) || numId < 1) return { title: `Blog - ${SITE.domain}` }
   try {
     const res = await apiClient.getBlogById(numId)
     const data = res.data as { title?: string; excerpt?: string }
     return {
-      title: `${data.title ?? "Blog"} - MemeSoundboard.Org`,
-      description: data.excerpt ?? "Read more on MemeSoundboard.org",
-      alternates: { canonical: `https://memesoundboard.org/blog/${id}` },
+      title: `${data.title ?? "Blog"} - ${SITE.domain}`,
+      description: data.excerpt ?? `Read more on ${SITE.domain}`,
+      alternates: { canonical: `${SITE.baseUrl}/blog/${id}` },
       openGraph: {
         title: data.title ?? "Blog",
         description: data.excerpt,
-        url: `https://memesoundboard.org/blog/${id}`,
-        images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+        url: `${SITE.baseUrl}/blog/${id}`,
+        images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
       },
       twitter: { card: "summary_large_image", images: ["/og.jpeg"] },
     }
   } catch {
-    return { title: "Blog - MemeSoundboard.Org" }
+    return { title: `Blog - ${SITE.domain}` }
   }
 }
 

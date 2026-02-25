@@ -3,17 +3,18 @@ import Link from "next/link"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import { apiClient } from "@/lib/api/client"
+import { SITE } from "@/lib/constants/site"
 
 export const metadata: Metadata = {
-  title: "Blog - MemeSoundboard.Org",
-  description: "Read our blog about meme sounds, soundboards, and fun audio for everyone.",
+  title: `Blog - ${SITE.domain}`,
+  description: `Read our blog about sound buttons, meme soundboard, and fun audio for everyone.`,
   openGraph: {
-    title: "Blog - MemeSoundboard.Org",
-    url: "https://memesoundboard.org/blog",
-    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+    title: `Blog - ${SITE.domain}`,
+    url: `${SITE.baseUrl}/blog`,
+    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: { card: "summary_large_image", images: ["/og.jpeg"] },
-  alternates: { canonical: "https://memesoundboard.org/blog" },
+  alternates: { canonical: `${SITE.baseUrl}/blog` },
   robots: { index: true, follow: true },
 }
 

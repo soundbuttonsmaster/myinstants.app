@@ -1,5 +1,10 @@
+"use client"
+
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { getActiveCategories } from "@/lib/constants/categories"
+import { SITE } from "@/lib/constants/site"
+import { getHeaderFooterTranslations, getLocaleFromPathname } from "@/lib/translations/header-footer"
 
 const socialLinks = [
   { name: "Facebook", href: "https://www.facebook.com/profile.php?id=61588291024439" },
@@ -13,7 +18,15 @@ const socialLinks = [
 ]
 
 export default function Footer() {
+  const pathname = usePathname()
+  const localeBase = pathname?.startsWith("/ru") ? "/ru" : pathname?.startsWith("/pt") ? "/pt" : pathname?.startsWith("/fr") ? "/fr" : pathname?.startsWith("/es") ? "/es" : ""
+  const locale = getLocaleFromPathname(pathname)
+  const t = getHeaderFooterTranslations(locale)
   const categories = getActiveCategories()
+  
+  const base = localeBase || ""
+  const homeHref = base ? base : "/"
+  const link = (path: string) => (base ? `${base}${path}` : path)
   
   return (
     <footer className="border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
@@ -21,59 +34,59 @@ export default function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
           <div>
             <h3 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">
-              MEME SOUNDBOARD
+              {SITE.name.toUpperCase()}
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              Free meme soundboard with thousands of sounds. Play, share, and enjoy!
+              {t.footerTagline}
             </p>
           </div>
           <div>
-            <h4 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">Links</h4>
+            <h4 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">{t.links}</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  Home
+                <Link href={homeHref} className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                  {t.homeLink}
                 </Link>
               </li>
               <li>
-                <Link href="/play-random" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  Play Random
+                <Link href={link("/play-random")} className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                  {t.playRandomLink}
                 </Link>
               </li>
               <li>
-                <Link href="/new" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  New Sounds
+                <Link href={link("/new")} className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                  {t.newSoundsLink}
                 </Link>
               </li>
               <li>
-                <Link href="/trending" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  Trending
+                <Link href={link("/trending")} className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                  {t.trendingLink}
                 </Link>
               </li>
               <li>
                 <Link href="/login" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  Sign In
+                  {t.signInLink}
                 </Link>
               </li>
               <li>
                 <Link href="/register" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  Create Account
+                  {t.createAccountLink}
                 </Link>
               </li>
               <li>
                 <Link href="/blog" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  Blog
+                  {t.blogLink}
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h4 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">Categories</h4>
+            <h4 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">{t.categoriesSection}</h4>
             <ul className="space-y-2 text-sm">
               {categories.map((category) => (
                 <li key={category.id}>
                   <Link 
-                    href={`/${category.slug}`} 
+                    href={link(`/${category.slug}`)} 
                     className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
                   >
                     {category.name}
@@ -83,59 +96,59 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">Resources</h4>
+            <h4 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">{t.resources}</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/about" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  About Us
+                <Link href={link("/about")} className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                  {t.aboutUs}
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  Contact Us
+                <Link href={link("/contact")} className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                  {t.contactUs}
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  Privacy Policy
+                <Link href={link("/privacy")} className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                  {t.privacyPolicy}
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  Terms & Conditions
+                <Link href={link("/terms")} className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                  {t.termsConditions}
                 </Link>
               </li>
               <li>
-                <Link href="/disclaimer" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  Disclaimer
+                <Link href={link("/disclaimer")} className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                  {t.disclaimer}
                 </Link>
               </li>
               <li>
-                <Link href="/dmca" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  DMCA Policy
+                <Link href={link("/dmca")} className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                  {t.dmcaPolicy}
                 </Link>
               </li>
               <li>
-                <Link href="/cookie-policy" className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
-                  Cookie Policy
+                <Link href={link("/cookie-policy")} className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                  {t.cookiePolicy}
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h4 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">Contact</h4>
+            <h4 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">{t.contact}</h4>
             <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
-              Have questions or feedback?
+              {t.haveQuestions}
             </p>
             <a 
-              href="mailto:play@memesoundboard.org" 
+              href={`mailto:${SITE.email}`} 
               className="text-sm text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200"
             >
-              play@memesoundboard.org
+              {SITE.email}
             </a>
           </div>
           <div>
-            <h4 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">Follow Us</h4>
+            <h4 className="mb-4 text-sm font-semibold text-slate-900 dark:text-white">{t.followUs}</h4>
             <ul className="space-y-2 text-sm">
               {socialLinks.map((social) => (
                 <li key={social.name}>
@@ -153,7 +166,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t border-slate-200 pt-8 text-center text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">
-          <p>© {new Date().getFullYear()} memesoundboard.org. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {SITE.domain}. {t.allRightsReserved}</p>
         </div>
       </div>
     </footer>

@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
 import { apiClient } from '@/lib/api/client'
 import type { Sound } from '@/lib/types/sound'
-
-const BASE = 'https://memesoundboard.org'
+import { SITE } from '@/lib/constants/site'
 
 function escapeXml(s: string): string {
   return s
@@ -35,9 +34,9 @@ export async function GET() {
     const items = results
       .map((sound) => {
         const slug = soundToSlug(sound)
-        const url = `${BASE}/${slug}`
-        const title = `${sound.name} Soundboard: Instant Sound Effect Button`
-        const description = `Play ${sound.name} - free meme sound, sound effect. ${sound.views?.toLocaleString() ?? 0} views · ${sound.likes_count?.toLocaleString() ?? 0} likes.`
+        const url = `${SITE.baseUrl}/${slug}`
+        const title = `${sound.name} Sound Buttons`
+        const description = `Play ${sound.name} - free sound button, sound effect. ${sound.views?.toLocaleString() ?? 0} views · ${sound.likes_count?.toLocaleString() ?? 0} likes.`
         const pubDate = sound.created_at
           ? new Date(sound.created_at).toUTCString()
           : lastBuild
@@ -54,12 +53,12 @@ export async function GET() {
     const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Meme Soundboard - Latest Sounds</title>
-    <link>${BASE}/new</link>
-    <description>Latest meme sounds and sound effects - free instant play sound buttons. New sounds added regularly.</description>
+    <title>${SITE.name} - Latest Sounds</title>
+    <link>${SITE.baseUrl}/new</link>
+    <description>Latest sound buttons and meme soundboard - free instant play. New sounds added regularly.</description>
     <language>en-us</language>
     <lastBuildDate>${lastBuild}</lastBuildDate>
-    <atom:link href="${BASE}/feed/sounds" rel="self" type="application/rss+xml"/>
+    <atom:link href="${SITE.baseUrl}/feed/sounds" rel="self" type="application/rss+xml"/>
 ${items}
   </channel>
 </rss>`
@@ -74,9 +73,9 @@ ${items}
     const fallback = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>Meme Soundboard - Latest Sounds</title>
-    <link>${BASE}/new</link>
-    <description>Latest meme sounds</description>
+    <title>${SITE.name} - Latest Sounds</title>
+    <link>${SITE.baseUrl}/new</link>
+    <description>Latest sound buttons</description>
   </channel>
 </rss>`
     return new NextResponse(fallback, {

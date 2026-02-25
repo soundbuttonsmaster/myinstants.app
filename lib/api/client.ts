@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://play.soundboard.cloud/api/memesoundboard.org'
+const API_BASE_URL = 'https://play.soundboard.cloud/api/myinstants.app'
 
 export interface ApiResponse<T> {
   status: number

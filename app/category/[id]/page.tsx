@@ -7,6 +7,7 @@ import Pagination from "@/components/ui/pagination"
 import { apiClient } from "@/lib/api/client"
 import type { Sound } from "@/lib/types/sound"
 import { getCategoryById } from "@/lib/constants/categories"
+import { SITE } from "@/lib/constants/site"
 
 interface CategoryPageProps {
   params: Promise<{ id: string }>
@@ -29,17 +30,17 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
       const category = response.data as { name: string }
       const catConst = getCategoryById(categoryId)
       const slug = catConst?.slug || (category.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-soundboard"
-      const title = `${category.name} Soundboard: Instant Sound Effect Buttons | MemeSoundboard.org`
-      const description = `Explore the best ${category.name} soundboard buttons with instant sound effects, viral meme buttons and funny soundboards. Free to play and download!`
+      const title = `${category.name} Soundboard: Instant Sound Buttons | Myinstants.app`
+      const description = `Explore our ${category.name} soundboard with trending sound buttons and meme soundboard. Download, play, and share ${category.name} sound effects for pranks, fun & entertainment!`
       return {
         title,
         description,
-        alternates: { canonical: `https://memesoundboard.org/${slug}` },
+        alternates: { canonical: `${SITE.baseUrl}/${slug}` },
         openGraph: {
           title,
           description,
-          url: `https://memesoundboard.org/${slug}`,
-          images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+          url: `${SITE.baseUrl}/${slug}`,
+          images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
         },
         twitter: { card: "summary_large_image", images: ["/og.jpeg"] },
       }
@@ -90,7 +91,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     notFound()
   }
 
-  const BASE = "https://memesoundboard.org"
+  const BASE = SITE.baseUrl
   const categoryFromConst = getCategoryById(categoryId)
   const categorySlug = categoryFromConst?.slug || categoryName.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-soundboard"
   const categoryUrl = `${BASE}/${categorySlug}`
@@ -132,7 +133,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
       <main className="mx-auto max-w-6xl px-4 py-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
-            {categoryName} Soundboard: Play Instant Sound Effect Buttons
+            {categoryName} Soundboard
           </h1>
           <p className="mt-2 text-slate-600 dark:text-slate-400">
             {count > 0

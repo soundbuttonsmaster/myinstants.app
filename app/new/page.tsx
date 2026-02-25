@@ -6,6 +6,7 @@ import Footer from "@/components/layout/footer"
 import NewSoundsList from "@/components/sound/new-sounds-list"
 import { apiClient } from "@/lib/api/client"
 import type { Sound } from "@/lib/types/sound"
+import { SITE } from "@/lib/constants/site"
 
 // Detect mobile device on server side
 function isMobileDevice(userAgent: string | null): boolean {
@@ -16,14 +17,17 @@ function isMobileDevice(userAgent: string | null): boolean {
 export const revalidate = 60
 
 export const metadata: Metadata = {
-  title: "New Soundboard: Latest Sound Buttons | MemeSoundboard.org",
-  description: "Play & Listen to the latest new sounds with fresh sound buttons, funny soundboard, meme buttons and new sound effects. No registration required!",
-  alternates: { canonical: "https://memesoundboard.org/new" },
+  title: "New Sound Buttons: Latest Meme Soundboard",
+  description: "Discover the newest sound buttons on Myinstants! Fresh prank sounds, unblocked meme soundboard, and latest sound effects added daily. Play and share instantly!",
+  alternates: {
+    canonical: `${SITE.baseUrl}/new`,
+    languages: { en: `${SITE.baseUrl}/new`, es: `${SITE.baseUrl}/es/new`, fr: `${SITE.baseUrl}/fr/new`, pt: `${SITE.baseUrl}/pt/new`, ru: `${SITE.baseUrl}/ru/new` },
+  },
   openGraph: {
-    title: "New Soundboard: Latest Sound Buttons | MemeSoundboard.org",
-    description: "Play & Listen to the latest new sounds with fresh sound buttons, funny soundboard, meme buttons and new sound effects. No registration required!",
-    url: "https://memesoundboard.org/new",
-    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+    title: "New Sound Buttons: Latest Meme Soundboard",
+    description: "Discover the newest sound buttons on Myinstants! Fresh prank sounds, unblocked meme soundboard, and latest sound effects added daily. Play and share instantly!",
+    url: `${SITE.baseUrl}/new`,
+    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: { card: "summary_large_image", images: ["/og.jpeg"] },
 }
@@ -54,24 +58,24 @@ export default async function NewPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "MemeSoundboard", "item": "https://memesoundboard.org" },
-      { "@type": "ListItem", "position": 2, "name": "New Sounds", "item": "https://memesoundboard.org/new" }
+      { "@type": "ListItem", "position": 1, "name": SITE.name, "item": SITE.baseUrl },
+      { "@type": "ListItem", "position": 2, "name": "New Sounds", "item": `${SITE.baseUrl}/new` }
     ]
   };
 
   const collectionSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "New Soundboard: Latest Sound Buttons Added Daily",
-    "description": "Discover the new meme soundboard buttons just added. Play the latest viral and funny sound effects.",
-    "url": "https://memesoundboard.org/new",
+    "name": "New Sound Buttons: Latest Meme Soundboard",
+    "description": "Find new sound buttons and prank sounds added daily to Myinstants soundboard collection!",
+    "url": `${SITE.baseUrl}/new`,
     "mainEntity": {
       "@type": "ItemList",
       "numberOfItems": count,
       "itemListElement": sounds.slice(0, 20).map((s, i) => ({
         "@type": "ListItem",
         "position": i + 1,
-        "item": { "@type": "AudioObject", "name": s.name, "url": `https://memesoundboard.org/${s.name?.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '') || 'sound'}-${s.id}` }
+        "item": { "@type": "AudioObject", "name": s.name, "url": `${SITE.baseUrl}/${s.name?.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '') || 'sound'}-${s.id}` }
       }))
     }
   };
@@ -86,10 +90,10 @@ export default async function NewPage() {
         <div className="mb-6">
           <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">
             <Sparkles className="h-6 w-6 text-emerald-500" />
-            New Soundboard: Latest Sound Buttons Added Daily
+            New Sound Buttons
           </h1>
           <p className="mt-2 text-slate-600 dark:text-slate-400">
-            Discover the new meme soundboard buttons just added! Play the latest viral and funny sound effects everyone is sharing on Discord, streams and chats. Totally free and unblocked!
+            Find new sound buttons and prank sounds added daily to Myinstants soundboard collection!
           </p>
           {count > 0 && (
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-500">

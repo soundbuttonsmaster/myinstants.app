@@ -2,16 +2,17 @@ import { Metadata } from "next"
 import Link from "next/link"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
+import { SITE } from "@/lib/constants/site"
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - MemeSoundboard.Org",
-  description: "Read MemeSoundboard.org's privacy policy to understand how we collect, use, and protect your information.",
+  title: `Privacy Policy - ${SITE.domain}`,
+  description: `Read ${SITE.domain}'s privacy policy to understand how we collect, use, and protect your information.`,
   robots: { index: true, follow: true },
-  alternates: { canonical: "https://memesoundboard.org/privacy" },
+  alternates: { canonical: `${SITE.baseUrl}/privacy` },
   openGraph: {
-    title: "Privacy Policy - MemeSoundboard.Org",
-    url: "https://memesoundboard.org/privacy",
-    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+    title: `Privacy Policy - ${SITE.domain}`,
+    url: `${SITE.baseUrl}/privacy`,
+    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: { card: "summary_large_image", images: ["/og.jpeg"] },
 }
@@ -32,9 +33,9 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Introduction</h2>
               <p>
-                At MemeSoundboard.org ("we," "our," or "us"), we are committed to protecting your privacy. This Privacy Policy 
+                At {SITE.domain} ("we," "our," or "us"), we are committed to protecting your privacy. This Privacy Policy 
                 explains how we collect, use, disclose, and safeguard your information when you visit our website 
-                memesoundboard.org (the "Service").
+                {SITE.domain} (the "Service").
               </p>
             </section>
 
@@ -120,8 +121,8 @@ export default function PrivacyPage() {
               </ul>
               <p className="mt-3">
                 To exercise these rights, please contact us at{" "}
-                <a href="mailto:play@memesoundboard.org" className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200">
-                  play@memesoundboard.org
+                <a href={`mailto:${SITE.email}`} className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200">
+                  {SITE.email}
                 </a>.
               </p>
             </section>
@@ -158,7 +159,7 @@ export default function PrivacyPage() {
                 If you have any questions about this Privacy Policy, please contact us at:
               </p>
               <p className="mt-2">
-                <strong>Email:</strong> <a href="mailto:play@memesoundboard.org" className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200">play@memesoundboard.org</a>
+                <strong>Email:</strong> <a href={`mailto:${SITE.email}`} className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200">{SITE.email}</a>
               </p>
             </section>
           </div>

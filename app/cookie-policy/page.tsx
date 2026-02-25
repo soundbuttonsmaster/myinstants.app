@@ -2,16 +2,17 @@ import { Metadata } from "next"
 import Link from "next/link"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
+import { SITE } from "@/lib/constants/site"
 
 export const metadata: Metadata = {
-  title: "Cookie Policy - MemeSoundboard.Org",
-  description: "Learn about how MemeSoundboard.org uses cookies and similar tracking technologies to enhance your browsing experience.",
+  title: `Cookie Policy - ${SITE.domain}`,
+  description: `Learn about how ${SITE.domain} uses cookies and similar tracking technologies to enhance your browsing experience.`,
   robots: { index: true, follow: true },
-  alternates: { canonical: "https://memesoundboard.org/cookie-policy" },
+  alternates: { canonical: `${SITE.baseUrl}/cookie-policy` },
   openGraph: {
-    title: "Cookie Policy - MemeSoundboard.Org",
-    url: "https://memesoundboard.org/cookie-policy",
-    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+    title: `Cookie Policy - ${SITE.domain}`,
+    url: `${SITE.baseUrl}/cookie-policy`,
+    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: { card: "summary_large_image", images: ["/og.jpeg"] },
 }
@@ -36,7 +37,7 @@ export default function CookiePolicyPage() {
                 Cookies are widely used to make websites work more efficiently and to provide information to the website owners.
               </p>
               <p className="mt-3">
-                MemeSoundboard.org uses cookies and similar tracking technologies to track activity on our Service and hold 
+                {SITE.domain} uses cookies and similar tracking technologies to track activity on our Service and hold 
                 certain information. Cookies are used to enable certain features of our Service, to provide analytics, to store 
                 your preferences, and to enable advertisement delivery.
               </p>
@@ -128,7 +129,7 @@ export default function CookiePolicyPage() {
               <p>
                 Some browsers include a "Do Not Track" (DNT) feature that signals to websites you visit that you do not want 
                 to have your online activity tracked. Currently, there is no standard for how to respond to DNT signals. 
-                MemeSoundboard.org does not currently respond to DNT browser signals or mechanisms.
+                {SITE.domain} does not currently respond to DNT browser signals or mechanisms.
               </p>
             </section>
 
@@ -147,7 +148,7 @@ export default function CookiePolicyPage() {
                 If you have any questions about our use of cookies or this Cookie Policy, please contact us at:
               </p>
               <p className="mt-2">
-                <strong>Email:</strong> <a href="mailto:play@memesoundboard.org" className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200">play@memesoundboard.org</a>
+                <strong>Email:</strong> <a href={`mailto:${SITE.email}`} className="text-blue-700 dark:text-blue-300 underline underline-offset-2 font-medium hover:text-blue-900 dark:hover:text-blue-200">{SITE.email}</a>
               </p>
             </section>
           </div>

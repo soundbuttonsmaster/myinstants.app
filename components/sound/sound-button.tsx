@@ -49,16 +49,10 @@ const cleanupAudioCache = () => {
 };
 
 const normalizeAudioUrl = (sound: Sound): string | null => {
-  // Always use API audio endpoint for proper CORS handling and security
-  // API endpoint: /sounds/{id}/audio
-  const API_BASE_URL = 'https://play.soundboard.cloud/api/memesoundboard.org';
-  
-  // Sound ID is required - always use API endpoint
+  // Use API client for consistent base URL and CORS
   if (sound.id && typeof sound.id === 'number') {
-    return `${API_BASE_URL}/sounds/${sound.id}/audio`;
+    return apiClient.getSoundAudioUrl(sound.id);
   }
-  
-  // If no ID, log error and return null
   console.error('Sound missing ID, cannot create audio URL:', sound);
   return null;
 };

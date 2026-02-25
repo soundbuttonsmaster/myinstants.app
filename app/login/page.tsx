@@ -4,29 +4,30 @@ import Link from "next/link"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import LoginForm from "@/components/auth/login-form"
+import { SITE } from "@/lib/constants/site"
 
 export const metadata: Metadata = {
-  title: "Sign In - MemeSoundboard.Org",
-  description: "Sign in to your MemeSoundboard.org account to access your favorite sounds. Safe and fun for everyone!",
-  keywords: ["meme soundboard login", "sign in", "account", "meme sounds"],
+  title: `Sign In - ${SITE.domain}`,
+  description: `Sign in to your ${SITE.domain} account to access your favorite sounds. Safe and fun for everyone!`,
+  keywords: ["sound buttons login", "sign in", "account", "Myinstants"],
   openGraph: {
-    title: "Sign In - MemeSoundboard.Org",
-    description: "Sign in to your account and enjoy your saved favorite meme sounds.",
-    url: "https://memesoundboard.org/login",
-    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+    title: `Sign In - ${SITE.domain}`,
+    description: "Sign in to your account and enjoy your saved favorite sound buttons.",
+    url: `${SITE.baseUrl}/login`,
+    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: { card: "summary_large_image", images: ["/og.jpeg"] },
-  alternates: { canonical: "https://memesoundboard.org/login" },
+  alternates: { canonical: `${SITE.baseUrl}/login` },
   robots: { index: true, follow: true },
 }
 
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "Sign In - MemeSoundboard.Org",
-  description: "Sign in to your account to access your favorite meme sounds.",
-  url: "https://memesoundboard.org/login",
-  publisher: { "@type": "Organization", name: "MemeSoundboard.org" },
+  name: `Sign In - ${SITE.domain}`,
+  description: "Sign in to your account to access your favorite sound buttons.",
+  url: `${SITE.baseUrl}/login`,
+  publisher: { "@type": "Organization", name: SITE.domain },
 }
 
 export default function LoginPage() {

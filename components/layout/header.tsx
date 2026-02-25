@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import SearchBar from "@/components/search-bar"
 import { getActiveCategories } from "@/lib/constants/categories"
+import { getHeaderFooterTranslations, getLocaleFromPathname } from "@/lib/translations/header-footer"
 import { useAuth } from "@/lib/auth/auth-context"
 
 export default function Header() {
@@ -16,10 +17,12 @@ export default function Header() {
   const { user, isReady, logout } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false)
+  const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false)
   const [userDropdownOpen, setUserDropdownOpen] = useState(false)
   const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(null)
   const categories = getActiveCategories()
   const userDropdownRef = useRef<HTMLDivElement>(null)
+  const languageDropdownRef = useRef<HTMLDivElement>(null)
 
   const handleLogout = () => {
     logout()
@@ -33,6 +36,7 @@ export default function Header() {
     setMobileMenuOpen(false)
     setMobileSubmenuOpen(null)
     setUserDropdownOpen(false)
+    setLanguageDropdownOpen(false)
   }, [pathname])
 
   // Close user dropdown on outside click
@@ -40,6 +44,9 @@ export default function Header() {
     const handler = (e: MouseEvent) => {
       if (userDropdownRef.current && !userDropdownRef.current.contains(e.target as Node)) {
         setUserDropdownOpen(false)
+      }
+      if (languageDropdownRef.current && !languageDropdownRef.current.contains(e.target as Node)) {
+        setLanguageDropdownOpen(false)
       }
     }
     document.addEventListener("mousedown", handler)
@@ -64,6 +71,26 @@ export default function Header() {
 
   const navLinkClass = "flex items-center gap-1 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white whitespace-nowrap shrink-0"
 
+  // Locale base path for nav links and search (e.g. /es, /fr, /pt, /ru)
+  const localeBase = pathname?.startsWith("/ru") ? "/ru" : pathname?.startsWith("/pt") ? "/pt" : pathname?.startsWith("/fr") ? "/fr" : pathname?.startsWith("/es") ? "/es" : ""
+  const locale = getLocaleFromPathname(pathname)
+  const t = getHeaderFooterTranslations(locale)
+
+  // Language switcher: same page in another locale
+  const LOCALES = [
+    { code: "en", label: "English", path: "" },
+    { code: "es", label: "Español", path: "/es" },
+    { code: "fr", label: "Français", path: "/fr" },
+    { code: "pt", label: "Português", path: "/pt" },
+    { code: "ru", label: "Русский", path: "/ru" },
+  ] as const
+  const pathWithoutLocale = localeBase ? (pathname?.slice(localeBase.length) || "") || "/" : (pathname || "/")
+  const currentLocale = LOCALES.find((l) => l.path === localeBase) || LOCALES[0]
+  const getLocaleHref = (path: string) => {
+    if (path === "") return pathWithoutLocale === "/" ? "/" : pathWithoutLocale
+    return pathWithoutLocale === "/" ? path : `${path}${pathWithoutLocale}`
+  }
+
   return (
     <>
       <header
@@ -72,9 +99,9 @@ export default function Header() {
         <div className="flex h-14 w-full items-center gap-4 px-4 lg:px-6">
           {/* Left: Logo only */}
           <div className="flex flex-shrink-0 items-center">
-            <Link href="/" className="shrink-0">
+            <Link href={localeBase || "/"} className="shrink-0">
               <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white whitespace-nowrap lg:text-xl">
-                MEME SOUNDBOARD
+                MYINSTANTS
               </span>
             </Link>
           </div>
@@ -82,16 +109,16 @@ export default function Header() {
           {/* Center: Menu items */}
           <nav className="hidden min-w-0 flex-1 justify-center md:flex">
             <div className="flex items-center gap-3 lg:gap-4">
-              <Link href="/" className={navLinkClass}>HOME</Link>
-              <Link href="/new" className={navLinkClass}>NEW</Link>
-              <Link href="/trending" className={navLinkClass}>TRENDING</Link>
+              <Link href={localeBase ? `${localeBase}` : "/"} className={navLinkClass}>{t.home}</Link>
+              <Link href={localeBase ? `${localeBase}/new` : "/new"} className={navLinkClass}>{t.new}</Link>
+              <Link href={localeBase ? `${localeBase}/trending` : "/trending"} className={navLinkClass}>{t.trending}</Link>
               <div
                 className="relative"
                 onMouseEnter={() => setCategoryDropdownOpen(true)}
                 onMouseLeave={() => setCategoryDropdownOpen(false)}
               >
                 <button type="button" className={`${navLinkClass} flex items-center gap-1`}>
-                  CATEGORIES
+                  {t.categories}
                   <ChevronDown className={`h-4 w-4 transition-transform ${categoryDropdownOpen ? "rotate-180" : ""}`} />
                 </button>
                 <div
@@ -105,7 +132,7 @@ export default function Header() {
                     {categories.map((category) => (
                       <Link
                         key={category.id}
-                        href={`/${category.slug}`}
+                        href={localeBase ? `${localeBase}/${category.slug}` : `/${category.slug}`}
                         className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors"
                         onClick={() => setCategoryDropdownOpen(false)}
                       >
@@ -115,15 +142,55 @@ export default function Header() {
                   </div>
                 </div>
               </div>
-              <Link href="/blog" className={navLinkClass}>BLOG</Link>
-              <Link href="/play-random" className={navLinkClass}>PLAY RANDOM</Link>
+              <Link href="/blog" className={navLinkClass}>{t.blog}</Link>
+              <Link href="/play-random" className={navLinkClass}>{t.playRandom}</Link>
+              {/* Language dropdown */}
+              <div
+                className="relative"
+                ref={languageDropdownRef}
+                onMouseEnter={() => setLanguageDropdownOpen(true)}
+                onMouseLeave={() => setLanguageDropdownOpen(false)}
+              >
+                <button
+                  type="button"
+                  className={`${navLinkClass} flex items-center gap-1`}
+                  aria-expanded={languageDropdownOpen}
+                  aria-haspopup="true"
+                  aria-label={t.selectLanguage}
+                >
+                  {currentLocale.label}
+                  <ChevronDown className={`h-4 w-4 transition-transform ${languageDropdownOpen ? "rotate-180" : ""}`} />
+                </button>
+                <div
+                  className={`absolute right-0 top-full w-40 rounded-lg border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-800 z-50 py-2 transition-opacity duration-200 mt-1 ${
+                    languageDropdownOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                  }`}
+                  onMouseEnter={() => setLanguageDropdownOpen(true)}
+                  onMouseLeave={() => setLanguageDropdownOpen(false)}
+                >
+                  {LOCALES.map((loc) => (
+                    <Link
+                      key={loc.code}
+                      href={getLocaleHref(loc.path)}
+                      className={`block px-4 py-2 text-sm transition-colors ${
+                        loc.code === currentLocale.code
+                          ? "bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white font-medium"
+                          : "text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700"
+                      }`}
+                      onClick={() => setLanguageDropdownOpen(false)}
+                    >
+                      {loc.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
           </nav>
 
           {/* Right: Search | Join free (or user) | Theme — fixed width to prevent CLS */}
           <div className="header-right flex flex-shrink-0 items-center gap-3 md:gap-4">
             <div className="hidden w-44 min-w-0 md:block lg:w-52">
-              <SearchBar />
+              <SearchBar searchBasePath={localeBase || undefined} placeholder={t.searchPlaceholder} />
             </div>
             <span className="hidden text-slate-300 dark:text-slate-600 md:inline" aria-hidden="true">|</span>
             {!isReady ? (
@@ -136,7 +203,7 @@ export default function Header() {
                   className="flex items-center gap-1.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white whitespace-nowrap rounded-lg px-2 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 >
                   <User className="h-4 w-4" />
-                  Hi, {user.username}
+                  {t.hi}, {user.username}
                   <ChevronDown className={`h-3.5 w-3.5 transition-transform ${userDropdownOpen ? "rotate-180" : ""}`} />
                 </button>
 
@@ -147,29 +214,29 @@ export default function Header() {
                   }`}
                 >
                   <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-800">
-                    <p className="text-xs text-slate-500 dark:text-slate-400">Signed in as</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{t.signedInAs}</p>
                     <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{user.username}</p>
                   </div>
                   <div className="py-1">
                     <Link href="/profile" onClick={() => setUserDropdownOpen(false)} className="flex items-center gap-2.5 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                       <User className="h-4 w-4 text-slate-400" />
-                      My Profile
+                      {t.myProfile}
                     </Link>
                     <Link href="/favorites" onClick={() => setUserDropdownOpen(false)} className="flex items-center gap-2.5 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                       <Heart className="h-4 w-4 text-slate-400" />
-                      My Favorites
+                      {t.myFavorites}
                     </Link>
                     <Link href="/likes" onClick={() => setUserDropdownOpen(false)} className="flex items-center gap-2.5 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                       <ThumbsUp className="h-4 w-4 text-slate-400" />
-                      My Likes
+                      {t.myLikes}
                     </Link>
                     <Link href="/uploads" onClick={() => setUserDropdownOpen(false)} className="flex items-center gap-2.5 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                       <Star className="h-4 w-4 text-slate-400" />
-                      My Uploads
+                      {t.myUploads}
                     </Link>
                     <Link href="/upload-sound" onClick={() => setUserDropdownOpen(false)} className="flex items-center gap-2.5 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                       <Upload className="h-4 w-4 text-slate-400" />
-                      Upload Sound
+                      {t.uploadSound}
                     </Link>
                   </div>
                   <div className="border-t border-slate-100 dark:border-slate-800 py-1">
@@ -179,7 +246,7 @@ export default function Header() {
                       className="flex w-full items-center gap-2.5 px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                     >
                       <LogOut className="h-4 w-4" />
-                      Sign out
+                      {t.signOut}
                     </button>
                   </div>
                 </div>
@@ -189,7 +256,7 @@ export default function Header() {
                 href="/register"
                 className="hidden items-center gap-1 text-sm font-semibold text-white whitespace-nowrap rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 px-3 py-1.5 transition-all hover:from-blue-600 hover:to-purple-700 md:inline-flex"
               >
-                JOIN FREE
+                {t.joinFree}
               </Link>
             )}
             <span className="hidden text-slate-300 dark:text-slate-600 md:inline" aria-hidden="true">|</span>
@@ -198,7 +265,7 @@ export default function Header() {
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 md:hidden"
-              aria-label="Toggle menu"
+              aria-label={t.toggleMenu}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -223,11 +290,11 @@ export default function Header() {
         <div className="flex flex-col h-full">
           {/* Mobile Menu Header */}
           <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Menu</h2>
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">{t.menu}</h2>
             <button
               onClick={() => setMobileMenuOpen(false)}
               className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-600 dark:text-slate-300"
-              aria-label="Close mobile menu"
+              aria-label={t.closeMenu}
             >
               <X className="h-5 w-5" />
             </button>
@@ -238,32 +305,32 @@ export default function Header() {
             <nav className="p-4 space-y-2">
               {/* Search Bar in Mobile Menu */}
               <div className="mb-4">
-                <SearchBar />
+                <SearchBar searchBasePath={localeBase || undefined} placeholder={t.searchPlaceholder} />
               </div>
 
               {/* Main Navigation Items */}
               <Link
-                href="/"
+                href={localeBase ? localeBase : "/"}
                 className="block py-3 px-4 text-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                HOME
+                {t.home}
               </Link>
 
               <Link
-                href="/new"
+                href={localeBase ? `${localeBase}/new` : "/new"}
                 className="block py-3 px-4 text-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                NEW
+                {t.new}
               </Link>
 
               <Link
-                href="/trending"
+                href={localeBase ? `${localeBase}/trending` : "/trending"}
                 className="block py-3 px-4 text-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                TRENDING
+                {t.trending}
               </Link>
 
               {/* Categories with Collapsible Submenu */}
@@ -272,7 +339,7 @@ export default function Header() {
                   onClick={() => toggleMobileSubmenu('categories')}
                   className="w-full flex items-center justify-between py-3 px-4 text-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                 >
-                  CATEGORIES
+                  {t.categories}
                   <ChevronRight className={`h-5 w-5 transition-transform ${mobileSubmenuOpen === 'categories' ? 'rotate-90' : ''}`} />
                 </button>
                 {mobileSubmenuOpen === 'categories' && (
@@ -280,7 +347,7 @@ export default function Header() {
                     {categories.map((category) => (
                       <Link
                         key={category.id}
-                        href={`/${category.slug}`}
+                        href={localeBase ? `${localeBase}/${category.slug}` : `/${category.slug}`}
                         className="block py-2 px-4 text-base text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                         onClick={() => setMobileMenuOpen(false)}
                       >
@@ -291,36 +358,58 @@ export default function Header() {
                 )}
               </div>
               <Link href="/blog" className="block py-3 px-4 text-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                BLOG
+                {t.blog}
               </Link>
               <Link
                 href="/play-random"
                 className="block py-3 px-4 text-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                PLAY RANDOM
+                {t.playRandom}
               </Link>
+              {/* Language switcher - mobile */}
+              <div className="border-t border-slate-200 dark:border-slate-700 pt-4 mt-2">
+                <p className="px-4 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  {t.language}
+                </p>
+                <div className="grid grid-cols-2 gap-2 px-4 mt-2">
+                  {LOCALES.map((loc) => (
+                    <Link
+                      key={loc.code}
+                      href={getLocaleHref(loc.path)}
+                      className={`py-2.5 px-3 rounded-lg text-sm font-medium transition-colors ${
+                        loc.code === currentLocale.code
+                          ? "bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white"
+                          : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+                      }`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {loc.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
               {isReady && (
                 <div className="border-t border-slate-200 dark:border-slate-700 p-4 space-y-2">
                   {user ? (
                     <>
                       <p className="px-4 py-2 text-slate-600 dark:text-slate-400">
-                        Hi, <strong className="text-slate-900 dark:text-white">{user.username}</strong>
+                        {t.hi}, <strong className="text-slate-900 dark:text-white">{user.username}</strong>
                       </p>
                       <Link href="/favorites" className="block py-3 px-4 text-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                        My Favorites
+                        {t.myFavorites}
                       </Link>
                       <Link href="/uploads" className="block py-3 px-4 text-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                        My Uploads
+                        {t.myUploads}
                       </Link>
                       <Link href="/likes" className="block py-3 px-4 text-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                        My Likes
+                        {t.myLikes}
                       </Link>
                       <Link href="/profile" className="block py-3 px-4 text-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                        My Profile
+                        {t.myProfile}
                       </Link>
                       <Link href="/upload-sound" className="block py-3 px-4 text-lg font-semibold text-white bg-gradient-to-r from-emerald-500 to-green-600 rounded-lg text-center" onClick={() => setMobileMenuOpen(false)}>
-                        Upload a sound
+                        {t.uploadSound}
                       </Link>
                       <button
                         type="button"
@@ -328,7 +417,7 @@ export default function Header() {
                         className="flex w-full items-center gap-2 py-3 px-4 text-lg font-medium text-red-600 dark:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                       >
                         <LogOut className="h-5 w-5" />
-                        Sign out
+                        {t.signOut}
                       </button>
                     </>
                   ) : (
@@ -338,14 +427,14 @@ export default function Header() {
                         className="block py-3 px-4 text-lg font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        Sign in
+                        {t.signIn}
                       </Link>
                       <Link
                         href="/register"
                         className="block py-3 px-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg text-center"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        Create free account
+                        {t.createFreeAccount}
                       </Link>
                     </>
                   )}

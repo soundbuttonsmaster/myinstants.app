@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server"
+import { SITE } from "@/lib/constants/site"
 
 const API_SITEMAP_INDEX =
-  "https://play.soundboard.cloud/media/sitemaps/sitemap_index_memesoundboard.org.xml"
-const SITE_ORIGIN = "https://memesoundboard.org"
+  `https://play.soundboard.cloud/media/sitemaps/sitemap_index_${SITE.domain}.xml`
 const API_SITEMAPS_PREFIX = "https://play.soundboard.cloud/media/sitemaps/"
 
 export const dynamic = "force-dynamic"
@@ -21,7 +21,7 @@ export async function GET() {
     // Rewrite child sitemap URLs to our domain so Google fetches from us
     xml = xml.replace(
       new RegExp(API_SITEMAPS_PREFIX.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
-      `${SITE_ORIGIN}/sitemaps/`
+      `${SITE.baseUrl}/sitemaps/`
     )
     return new NextResponse(xml, {
       status: 200,

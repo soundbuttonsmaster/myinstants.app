@@ -13,7 +13,7 @@ function generateSlug(query: string): string {
     .replace(/^-+|-+$/g, '') || ''
 }
 
-export default function SearchBar() {
+export default function SearchBar({ searchBasePath = "", placeholder }: { searchBasePath?: string; placeholder?: string }) {
   const [query, setQuery] = useState("")
   const router = useRouter()
 
@@ -21,7 +21,8 @@ export default function SearchBar() {
     e.preventDefault()
     if (query.trim()) {
       const slug = generateSlug(query.trim())
-      router.push(`/search/${slug}`)
+      const base = searchBasePath || ""
+      router.push(base ? `${base}/search/${slug}` : `/search/${slug}`)
     }
   }
 
@@ -31,7 +32,7 @@ export default function SearchBar() {
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search sounds..."
+        placeholder={placeholder ?? "Search sounds..."}
         className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 pl-10 pr-4 text-sm text-slate-900 placeholder-slate-500 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white dark:placeholder-slate-400"
         style={{
           height: '40px', // Fixed height to prevent CLS

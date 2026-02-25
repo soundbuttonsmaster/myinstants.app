@@ -3,16 +3,17 @@ import Link from "next/link"
 import Header from "@/components/layout/header"
 import Footer from "@/components/layout/footer"
 import ResetPasswordForm from "@/components/auth/reset-password-form"
+import { SITE } from "@/lib/constants/site"
 
 export const metadata: Metadata = {
-  title: "Reset Password - MemeSoundboard.Org",
-  description: "Create a new password for your MemeSoundboard.org account.",
+  title: `Reset Password - ${SITE.domain}`,
+  description: `Create a new password for your ${SITE.domain} account.`,
   robots: { index: false, follow: true },
-  alternates: { canonical: "https://memesoundboard.org/reset-password" },
+  alternates: { canonical: `${SITE.baseUrl}/reset-password` },
   openGraph: {
-    title: "Reset Password - MemeSoundboard.Org",
-    url: "https://memesoundboard.org/reset-password",
-    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: "MemeSoundboard.org" }],
+    title: `Reset Password - ${SITE.domain}`,
+    url: `${SITE.baseUrl}/reset-password`,
+    images: [{ url: "/og.jpeg", width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: { card: "summary_large_image", images: ["/og.jpeg"] },
 }
