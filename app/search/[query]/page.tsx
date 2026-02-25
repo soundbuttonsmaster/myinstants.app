@@ -115,6 +115,8 @@ export default async function SearchQueryPage({ params }: SearchQueryPageProps) 
   let totalItems = 0
   let hasMore = false
 
+  const queryTitle = toTitleCase(sanitizedQuery)
+
   try {
     const response = await apiClient.searchSounds(sanitizedQuery, 1, 40)
     if (response?.data && typeof response.data === 'object' && 'results' in response.data) {
