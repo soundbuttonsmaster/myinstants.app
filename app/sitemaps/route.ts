@@ -23,10 +23,14 @@ export async function GET() {
       new RegExp(API_SITEMAPS_PREFIX.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
       `${SITE.baseUrl}/sitemaps/`
     )
+    if (!xml.startsWith("<?xml")) {
+      xml = '<?xml version="1.0" encoding="UTF-8"?>\n' + xml
+    }
+    xml = xml.replace(/<loc>\s([^<]+?)\s<\/loc>/g, (_m, url) => "<loc>" + url.trim() + "</loc>")
     return new NextResponse(xml, {
       status: 200,
       headers: {
-        "Content-Type": "application/xml",
+        "Content-Type": "application/xml; charset=utf-8",
         "Cache-Control": "public, s-maxage=3600, stale-while-revalidate",
       },
     })
